@@ -12,7 +12,7 @@ public abstract class HancaDatabase extends RoomDatabase implements DBConstants 
 
     public abstract HouseDao houseDao();
 
-    public static HancaDatabase sInstance;
+    private static HancaDatabase sInstance;
 
     public static HancaDatabase getDatabase(final Context context) {
         if (sInstance == null) {

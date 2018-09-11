@@ -14,9 +14,9 @@ import me.yeojoy.hancahouse.db.DBConstants;
 @Entity(tableName = DBConstants.TABLE_NAME)
 public class House implements Parcelable {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    private int mId;
+    private int mId = -1;
 
     @NonNull
     @ColumnInfo(name = "title")
@@ -35,9 +35,6 @@ public class House implements Parcelable {
 
     @ColumnInfo(name = "date")
     private long mDate;
-
-    @ColumnInfo(name = "update_date")
-    private long mUpdateDate;
 
     /**
      * unique id in board
@@ -59,7 +56,6 @@ public class House implements Parcelable {
         mThumbnailUrl = in.readString();
         mUrl = in.readString();
         mDate = in.readLong();
-        mUpdateDate = in.readLong();
         mUid = in.readLong();
     }
 
@@ -95,10 +91,6 @@ public class House implements Parcelable {
         return mDate;
     }
 
-    public long getUpdateDate() {
-        return mUpdateDate;
-    }
-
     public long getUid() {
         return mUid;
     }
@@ -115,7 +107,6 @@ public class House implements Parcelable {
         parcel.writeString(mThumbnailUrl);
         parcel.writeString(mUrl);
         parcel.writeLong(mDate);
-        parcel.writeLong(mUpdateDate);
         parcel.writeLong(mUid);
     }
 
@@ -127,7 +118,6 @@ public class House implements Parcelable {
                 ", mThumbnailUrl='" + mThumbnailUrl + '\'' +
                 ", mUrl='" + mUrl + '\'' +
                 ", mDate=" + mDate +
-                ", mUpdateDate=" + mUpdateDate +
                 ", mUid=" + mUid +
                 '}';
     }
@@ -144,5 +134,9 @@ public class House implements Parcelable {
     public int hashCode() {
 
         return Objects.hash(this);
+    }
+
+    public void setId(int id) {
+        mId = id;
     }
 }
