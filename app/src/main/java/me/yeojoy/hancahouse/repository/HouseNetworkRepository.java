@@ -16,18 +16,36 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import me.yeojoy.hancahouse.app.Constants;
 import me.yeojoy.hancahouse.model.House;
 
 public class HouseNetworkRepository {
     private static final String TAG = HouseNetworkRepository.class.getSimpleName();
 
-    private static final String DATE_FORMATTER = "yyyy.MM.dd";
+    private static HouseNetworkRepository sInstance;
+
+    public static HouseNetworkRepository getInstance() {
+        if (sInstance == null) {
+            synchronized (HouseNetworkRepository.class) {
+                if (sInstance == null) {
+                    sInstance = new HouseNetworkRepository();
+                }
+            }
+        }
+
+        return sInstance;
+    }
+
+    private HouseNetworkRepository() {
+
+    }
 
     public void loadPage(int page, OnLoadPageListener listener) {
         Runnable network = () -> {
 //            String url = "http://192.168.8.107:5000"; // egg
-            String url = "http://192.168.1.136:5000"; // home network
-            /* String.format("https://hanca.com/%EA%B5%90%EB%AF%BC%EC%9E%A5%ED%84%B0/?category1=%EC%95%84%ED%8C%8C%ED%8A%B8%2F%EC%A7%91+%EB%A0%8C%ED%8A%B8&mod=list&pageid=%d", page); */
+//            String url = "http://192.168.1.136:5000"; // home network
+            String url = "http://172.20.10.4:5000"; // iphone
+//            String url = String.format("https://hanca.com/%EA%B5%90%EB%AF%BC%EC%9E%A5%ED%84%B0/?category1=%EC%95%84%ED%8C%8C%ED%8A%B8%2F%EC%A7%91+%EB%A0%8C%ED%8A%B8&mod=list&pageid=%d", page);
             Connection.Response response = null;
             try {
                 response = Jsoup.connect(url)
@@ -68,7 +86,7 @@ public class HouseNetworkRepository {
 
                 String title = titleElement.text();
                 String dateString = dateElement.text();
-                SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMATTER);
+                SimpleDateFormat formatter = new SimpleDateFormat(Constants.WEB_DATE_FORMATTER);
                 Date date = null;
                 try {
                     date = formatter.parse(dateString);

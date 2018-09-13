@@ -16,7 +16,7 @@ public class House implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    private int mId = -1;
+    private int mId;
 
     @NonNull
     @ColumnInfo(name = "title")

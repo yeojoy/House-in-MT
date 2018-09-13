@@ -13,15 +13,12 @@ import me.yeojoy.hancahouse.model.House;
 
 @Dao
 public interface HouseDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(House house);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(House... house);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(List<House> houses);
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void update(House... house);
 
-    @Update(onConflict = OnConflictStrategy.IGNORE)
-    void update(House house);
-
-    @Query("SELECT * FROM " + DBConstants.TABLE_NAME)
+    @Query("SELECT * FROM " + DBConstants.TABLE_NAME + " ORDER BY uid DESC")
     LiveData<List<House>> getAllHouses();
 }

@@ -4,13 +4,16 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import me.yeojoy.hancahouse.app.adapter.HouseAdapter;
 import me.yeojoy.hancahouse.model.House;
+import me.yeojoy.hancahouse.view.MainView;
 import me.yeojoy.hancahouse.viewmodel.MainViewModel;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainView {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -22,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        recyclerView.setAdapter(new HouseAdapter(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         FloatingActionButton floatingActionButton = findViewById(R.id.floating_action_button_refresh);
         floatingActionButton.setOnClickListener(view -> {
 
@@ -31,12 +37,18 @@ public class MainActivity extends AppCompatActivity {
         mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         mMainViewModel.loadData(1);
 
-        mMainViewModel.getHouses().observe(this, data -> {
+        mMainViewModel.getHouses().observe(this, houses -> {
             Log.d(TAG, "=================================================================");
-            for (House house : data) {
+            for (House house : houses) {
                 Log.d(TAG, house.toString());
             }
+            ((HouseAdapter) recyclerView.getAdapter()).setHouses(houses);
             Log.d(TAG, "=================================================================");
         });
+    }
+
+    @Override
+    public void onItemClick(House house) {
+
     }
 }
