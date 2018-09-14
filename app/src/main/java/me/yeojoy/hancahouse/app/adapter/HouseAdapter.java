@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import me.yeojoy.hancahouse.BuildConfig;
 import me.yeojoy.hancahouse.R;
 import me.yeojoy.hancahouse.app.Constants;
 import me.yeojoy.hancahouse.app.GlideApp;
@@ -52,9 +53,15 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
                 = new SimpleDateFormat(Constants.APP_DATE_FORMAT, Locale.getDefault());
         holder.mTextViewTitle.setText(house.getTitle());
         holder.mTextViewDate.setText(simpleDateFormat.format(new Date(house.getDate())));
-        holder.mTextViewAuthor.setText(String.valueOf(house.getUid()));
 
-        holder.itemView.setOnClickListener(view -> mMainView.onItemClick(house));
+        String author = house.getAuthor() == null ? "" : house.getAuthor();
+        if (BuildConfig.DEBUG) {
+            author = author + " >>> uid : " + String.valueOf(house.getUid());
+        }
+
+        holder.mTextViewAuthor.setText(author);
+
+        holder.itemView.setOnClickListener(view -> mMainView.onItemClick(holder.mImageViewThumbnail, house));
     }
 
     @Override

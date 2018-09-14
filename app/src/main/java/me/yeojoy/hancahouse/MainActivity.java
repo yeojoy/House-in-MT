@@ -1,12 +1,15 @@
 package me.yeojoy.hancahouse;
 
+import android.app.ActivityOptions;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.ImageView;
 
 import me.yeojoy.hancahouse.app.adapter.HouseAdapter;
 import me.yeojoy.hancahouse.model.House;
@@ -48,7 +51,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
-    public void onItemClick(House house) {
-
+    public void onItemClick(ImageView imageView, House house) {
+        ActivityOptions activityOptions =
+                ActivityOptions.makeSceneTransitionAnimation(
+                        this, imageView, "logo");
+        Intent intent = new Intent(this, DetailHouseActivity.class);
+        intent.putExtra(House.class.getSimpleName(), house);
+        startActivity(intent, activityOptions.toBundle());
     }
 }

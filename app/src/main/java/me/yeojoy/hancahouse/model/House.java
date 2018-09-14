@@ -33,6 +33,9 @@ public class House implements Parcelable {
     @ColumnInfo(name = "url")
     private String mUrl;
 
+    @ColumnInfo(name = "author")
+    private String mAuthor;
+
     @ColumnInfo(name = "date")
     private long mDate;
 
@@ -42,10 +45,11 @@ public class House implements Parcelable {
     @ColumnInfo(name = "uid")
     private long mUid;
 
-    public House(@NonNull String title, @NonNull String thumbnailUrl, @NonNull String url, long date, long uid) {
+    public House(@NonNull String title, @NonNull String thumbnailUrl, @NonNull String url, String author, long date, long uid) {
         mTitle = title;
         mThumbnailUrl = thumbnailUrl;
         mUrl = url;
+        mAuthor = author;
         mDate = date;
         mUid = uid;
     }
@@ -55,6 +59,7 @@ public class House implements Parcelable {
         mTitle = in.readString();
         mThumbnailUrl = in.readString();
         mUrl = in.readString();
+        mAuthor = in.readString();
         mDate = in.readLong();
         mUid = in.readLong();
     }
@@ -87,6 +92,10 @@ public class House implements Parcelable {
         return mUrl;
     }
 
+    public String getAuthor() {
+        return mAuthor;
+    }
+
     public long getDate() {
         return mDate;
     }
@@ -106,6 +115,7 @@ public class House implements Parcelable {
         parcel.writeString(mTitle);
         parcel.writeString(mThumbnailUrl);
         parcel.writeString(mUrl);
+        parcel.writeString(mAuthor);
         parcel.writeLong(mDate);
         parcel.writeLong(mUid);
     }
@@ -117,6 +127,7 @@ public class House implements Parcelable {
                 ", mTitle='" + mTitle + '\'' +
                 ", mThumbnailUrl='" + mThumbnailUrl + '\'' +
                 ", mUrl='" + mUrl + '\'' +
+                ", mAuthor='" + mAuthor + '\'' +
                 ", mDate=" + mDate +
                 ", mUid=" + mUid +
                 '}';
