@@ -2,6 +2,7 @@ package me.yeojoy.hancahouse.app.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import me.yeojoy.hancahouse.app.GlideApp;
 import me.yeojoy.hancahouse.model.House;
 import me.yeojoy.hancahouse.view.MainView;
 
-public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHolder> {
+public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHolder> implements Constants {
 
     private List<House> mHouses;
     private MainView mMainView;
@@ -43,11 +44,13 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
     public void onBindViewHolder(@NonNull HouseViewHolder holder, int i) {
         House house = mHouses.get(i);
 
-        GlideApp.with(holder.mImageViewThumbnail)
-                .load(house.getThumbnailUrl())
-                .fitCenter()
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .into(holder.mImageViewThumbnail);
+        if (!TextUtils.isEmpty(house.getThumbnailUrl()) && !house.getThumbnailUrl().equals(NO_IMAGE)) {
+            GlideApp.with(holder.mImageViewThumbnail)
+                    .load(house.getThumbnailUrl())
+                    .fitCenter()
+                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .into(holder.mImageViewThumbnail);
+        }
 
         SimpleDateFormat simpleDateFormat
                 = new SimpleDateFormat(Constants.APP_DATE_FORMAT, Locale.getDefault());

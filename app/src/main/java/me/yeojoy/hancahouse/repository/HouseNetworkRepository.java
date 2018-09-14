@@ -20,7 +20,7 @@ import java.util.Locale;
 import me.yeojoy.hancahouse.app.Constants;
 import me.yeojoy.hancahouse.model.House;
 
-public class HouseNetworkRepository {
+public class HouseNetworkRepository implements Constants {
     private static final String TAG = HouseNetworkRepository.class.getSimpleName();
 
     private static HouseNetworkRepository sInstance;
@@ -43,13 +43,9 @@ public class HouseNetworkRepository {
 
     public void loadPage(int page, OnLoadPageListener listener) {
         Runnable network = () -> {
-//            String url = "http://192.168.8.107:5000"; // egg
-            String url = "http://192.168.1.136:5000"; // home network
-//            String url = "http://172.20.10.4:5000"; // iphone
-//            String url = String.format("https://hanca.com/%EA%B5%90%EB%AF%BC%EC%9E%A5%ED%84%B0/?category1=%EC%95%84%ED%8C%8C%ED%8A%B8%2F%EC%A7%91+%EB%A0%8C%ED%8A%B8&mod=list&pageid=%d", page);
             Connection.Response response = null;
             try {
-                response = Jsoup.connect(url)
+                response = Jsoup.connect(URL)
                         .method(Connection.Method.GET)
                         .execute();
             } catch (IOException e) {
@@ -77,9 +73,9 @@ public class HouseNetworkRepository {
 
                 String thumbnailUrl = thumbnailElement.select("img").attr("src");
                 if (!TextUtils.isEmpty(thumbnailUrl)) {
-                    thumbnailUrl = url + thumbnailUrl.substring(1);
+                    thumbnailUrl = URL + thumbnailUrl.substring(1);
                 } else {
-                    thumbnailUrl = "No IMAGES!";
+                    thumbnailUrl = NO_IMAGE;
                 }
 
                 String detailUrl = thumbnailElement.attr("href");
@@ -107,7 +103,7 @@ public class HouseNetworkRepository {
 //                Log.d(TAG, "thumbnail > " + thumbnail.toString());
 //                Log.d(TAG, "title > " + title.toString());
 //                Log.d(TAG, "date > " + date.toString());
-                House house = new House(title, thumbnailUrl, url, author,
+                House house = new House(title, thumbnailUrl, detailUrl, author,
                         date != null ? date.getTime() : 0, Integer.parseInt(uid));
 
                 houses.add(house);
