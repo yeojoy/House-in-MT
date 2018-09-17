@@ -32,9 +32,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         FloatingActionButton floatingActionButton = findViewById(R.id.floating_action_button_refresh);
-        floatingActionButton.setOnClickListener(view -> {
-
-        });
+        floatingActionButton.setOnClickListener(view -> mMainViewModel.loadData(1));
 
         // mModel = ViewModelProviders.of(this).get(NameViewModel.class);
         mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);

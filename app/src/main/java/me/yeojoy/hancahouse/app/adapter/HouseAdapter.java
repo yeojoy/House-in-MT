@@ -44,13 +44,12 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
     public void onBindViewHolder(@NonNull HouseViewHolder holder, int i) {
         House house = mHouses.get(i);
 
-        if (!TextUtils.isEmpty(house.getThumbnailUrl()) && !house.getThumbnailUrl().equals(NO_IMAGE)) {
-            GlideApp.with(holder.mImageViewThumbnail)
-                    .load(house.getThumbnailUrl())
-                    .fitCenter()
-                    .placeholder(R.drawable.ic_launcher_foreground)
-                    .into(holder.mImageViewThumbnail);
-        }
+        GlideApp.with(holder.mImageViewThumbnail)
+                .load(house.getThumbnailUrl())
+                .fitCenter()
+                // icon from https://www.brandeps.com/icon/H/Home-01-thanks?filetype=zip
+                .placeholder(R.drawable.ic_home_default)
+                .into(holder.mImageViewThumbnail);
 
         SimpleDateFormat simpleDateFormat
                 = new SimpleDateFormat(Constants.APP_DATE_FORMAT, Locale.getDefault());

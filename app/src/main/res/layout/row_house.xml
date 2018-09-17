@@ -14,6 +14,7 @@
         android:layout_marginLeft="8dp"
         android:scaleType="centerCrop"
         android:transitionName="logo"
+        android:background="@drawable/bg_row_house"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"

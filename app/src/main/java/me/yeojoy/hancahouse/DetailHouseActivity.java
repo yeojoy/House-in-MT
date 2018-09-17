@@ -2,15 +2,25 @@ package me.yeojoy.hancahouse;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.util.Patterns;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import me.yeojoy.hancahouse.app.Constants;
 import me.yeojoy.hancahouse.app.GlideApp;
@@ -52,6 +62,7 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
         mTextViewAuthor = findViewById(R.id.text_view_author);
         mTextViewTitle = findViewById(R.id.text_view_title);
         mTextViewDescription = findViewById(R.id.text_view_description);
+        mTextViewDescription.setMovementMethod(LinkMovementMethod.getInstance());
 
         mLinearLayoutImages = findViewById(R.id.linear_layout_images);
 
@@ -68,7 +79,10 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
     }
 
     private void bindDataToView(HouseDetail houseDetail) {
-        mTextViewDescription.setText(houseDetail.getContents());
+        if (TextUtils.isEmpty(houseDetail.getContents())) {
+            return;
+        }
+        mTextViewDescription.setText(getDetailDescription(houseDetail.getContents()));
 
         mLinearLayoutImages.removeAllViews();
 
@@ -97,5 +111,71 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
     protected void onResume() {
         super.onResume();
         mDetailViewModel.loadPage(mDetailViewModel.getHouseDetailLiveData().getValue());
+    }
+
+    private SpannableStringBuilder getDetailDescription(String contents) {
+        Log.d(TAG, "contents : " + contents);
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+
+        int indexOfEmail = contents.indexOf(TITLE_EMAIL) + TITLE_EMAIL.length();
+        int indexOfPhoneStart = contents.indexOf(TITLE_PHONE);
+        int indexOfPhoneEnd = indexOfPhoneStart + TITLE_PHONE.length();
+        int indexOfRegion = contents.indexOf(TITLE_REGION);
+
+        spannableStringBuilder.append(contents.substring(0, indexOfEmail));
+        spannableStringBuilder.append(" ");
+
+        String email = contents.substring(indexOfEmail, indexOfPhoneStart);
+        email = email.trim();
+
+        if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            SpannableString emailSpannableString = new SpannableString(email);
+            emailSpannableString.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO);
+                    intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+                    intent.putExtra(Intent.EXTRA_EMAIL, new String[] { emailSpannableString.toString() });
+
+//                intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
+
+                    Toast.makeText(DetailHouseActivity.this, "email", Toast.LENGTH_SHORT).show();
+
+                }
+            }, 0, emailSpannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            spannableStringBuilder.append(emailSpannableString);
+        } else {
+            spannableStringBuilder.append(email);
+        }
+
+        spannableStringBuilder.append(System.lineSeparator());
+        spannableStringBuilder.append(contents.substring(indexOfPhoneStart, indexOfPhoneEnd));
+        spannableStringBuilder.append(" ");
+
+        String phoneNumber = contents.substring(indexOfPhoneEnd, indexOfRegion);
+        phoneNumber = phoneNumber.trim();
+        if (Patterns.PHONE.matcher(phoneNumber).matches()) {
+            SpannableString phoneSpannableString = new SpannableString(phoneNumber);
+            phoneSpannableString.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(DetailHouseActivity.this, "phone", Toast.LENGTH_SHORT).show();
+                }
+            }, 0, phoneSpannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableStringBuilder.append(phoneSpannableString);
+        } else {
+            spannableStringBuilder.append(phoneNumber);
+        }
+
+        spannableStringBuilder.append(System.lineSeparator());
+        spannableStringBuilder.append(contents.substring(indexOfRegion));
+
+
+        return spannableStringBuilder;
     }
 }

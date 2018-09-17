@@ -14,5 +14,9 @@ public interface Constants {
     String DETAIL_URL = URL + "/detail";
 
     String NO_IMAGE = "---";
+
+    String TITLE_EMAIL = "E-mail:";
+    String TITLE_PHONE = "전화번호:";
+    String TITLE_REGION = "지역:";
 }
 

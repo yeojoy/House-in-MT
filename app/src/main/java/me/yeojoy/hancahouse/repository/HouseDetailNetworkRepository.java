@@ -1,16 +1,17 @@
 package me.yeojoy.hancahouse.repository;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,13 +63,38 @@ public class HouseDetailNetworkRepository implements Constants {
             Elements contents = detailDocument.select("div.content-view");
             Elements images = detailDocument.select("div.content-view > img");
 
-            String contentString = contents.text();
+            Log.d(TAG, "contents > " + contents.toString());
+
+            StringBuilder contentStringBuilder = new StringBuilder();
+
+            List<Node> childNodes = contents.get(0).childNodes();
+
+            for (Node node : childNodes) {
+                if (node.nodeName().equals("img")) {
+                    continue;
+                }
+
+                String text = node.toString();
+                if (text.equals("<br>")) {
+                    text = System.lineSeparator();
+                } else if (text.equals(" ")) {
+                    continue;
+                } else if (text.contains("&nbsp;")) {
+                    text = text.replaceAll("(&nbsp;)", " ").trim();
+                }
+
+                if (!TextUtils.isEmpty(text)) {
+                    contentStringBuilder.append(text);
+                }
+            }
+
             List<String> imageUrls = new ArrayList<>();
             for (Element e : images) {
                 imageUrls.add(e.attr("src"));
             }
 
-            houseDetail.setContents(contentString);
+            Log.d(TAG, "content > " + contentStringBuilder.toString());
+            houseDetail.setContents(contentStringBuilder.toString());
 
             if (imageUrls.size() > 0) {
                 houseDetail.setImageUrls(imageUrls);
