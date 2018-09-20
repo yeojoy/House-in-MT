@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setSupportActionBar(findViewById(R.id.toolbar));
+
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setAdapter(new HouseAdapter(this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
             for (House house : houses) {
                 Log.d(TAG, house.toString());
             }
+
             ((HouseAdapter) recyclerView.getAdapter()).setHouses(houses);
             Log.d(TAG, "=================================================================");
         });

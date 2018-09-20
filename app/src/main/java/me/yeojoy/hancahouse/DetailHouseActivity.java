@@ -3,10 +3,16 @@ package me.yeojoy.hancahouse;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -16,6 +22,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -33,9 +40,7 @@ import me.yeojoy.hancahouse.viewmodel.DetailViewModel;
 public class DetailHouseActivity extends AppCompatActivity implements Constants {
     private static final String TAG = DetailHouseActivity.class.getSimpleName();
 
-    private ImageView mImageViewThumbnail;
-
-    private TextView mTextViewAuthor, mTextViewTitle, mTextViewDescription;
+    private TextView mTextViewDescription;
     private ProgressBar mProgressBarLoading;
 
     private LinearLayout mLinearLayoutImages;
@@ -47,6 +52,9 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_house);
 
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Intent intent = getIntent();
         if (intent == null) finish();
 
@@ -54,16 +62,20 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
 
         if (house == null) finish();
 
+        AppBarLayout appBarLayout = findViewById(R.id.appbar);
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        params.height = getResources().getDisplayMetrics().widthPixels;
+        appBarLayout.setLayoutParams(params);
+
         mDetailViewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
 
         HouseDetail houseDetail = new HouseDetail(house.getTitle(), house.getUrl());
         mDetailViewModel.getHouseDetailLiveData().setValue(houseDetail);
         mDetailViewModel.getHouseDetailLiveData().observe(this, this::bindDataToView);
 
-        mImageViewThumbnail = findViewById(R.id.image_view_thumbnail);
+        ImageView imageViewThumbnail = findViewById(R.id.image_view_thumbnail);
 
-        mTextViewAuthor = findViewById(R.id.text_view_author);
-        mTextViewTitle = findViewById(R.id.text_view_title);
+        TextView textViewTitle = findViewById(R.id.text_view_title);
         mTextViewDescription = findViewById(R.id.text_view_description);
         mTextViewDescription.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -75,12 +87,21 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
                 !house.getThumbnailUrl().equals(NO_IMAGE)) {
             GlideApp.with(this)
                     .load(house.getThumbnailUrl())
-                    .into(mImageViewThumbnail);
+                    .into(imageViewThumbnail);
         }
+        textViewTitle.setText(house.getTitle());
 
+        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
+        collapsingToolbarLayout.setTitle(house.getAuthor());
+    }
 
-        mTextViewAuthor.setText(house.getAuthor());
-        mTextViewTitle.setText(house.getTitle());
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void bindDataToView(HouseDetail houseDetail) {
