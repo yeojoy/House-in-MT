@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
     private ImageView mImageViewThumbnail;
 
     private TextView mTextViewAuthor, mTextViewTitle, mTextViewDescription;
+    private ProgressBar mProgressBarLoading;
 
     private LinearLayout mLinearLayoutImages;
 
@@ -65,6 +67,8 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
         mTextViewDescription = findViewById(R.id.text_view_description);
         mTextViewDescription.setMovementMethod(LinkMovementMethod.getInstance());
 
+        mProgressBarLoading = findViewById(R.id.progress_bar_loading);
+
         mLinearLayoutImages = findViewById(R.id.linear_layout_images);
 
         if (!TextUtils.isEmpty(house.getThumbnailUrl()) &&
@@ -83,6 +87,9 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
         if (TextUtils.isEmpty(houseDetail.getContents())) {
             return;
         }
+
+        mProgressBarLoading.setVisibility(View.GONE);
+
         mTextViewDescription.setText(getDetailDescription(houseDetail.getContents()));
 
         mLinearLayoutImages.removeAllViews();
