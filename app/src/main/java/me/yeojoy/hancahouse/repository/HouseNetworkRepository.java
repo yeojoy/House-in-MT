@@ -10,6 +10,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,8 +45,10 @@ public class HouseNetworkRepository implements Constants {
     public void loadPage(int page, OnLoadPageListener listener) {
         Runnable network = () -> {
             Connection.Response response = null;
+
             try {
-                response = Jsoup.connect(URL)
+                String url = URLDecoder.decode(URL_FORMAT, "UTF-8") + page;
+                response = Jsoup.connect(url)
                         .method(Connection.Method.GET)
                         .execute();
             } catch (IOException e) {

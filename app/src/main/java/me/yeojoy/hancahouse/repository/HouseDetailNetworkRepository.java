@@ -42,7 +42,14 @@ public class HouseDetailNetworkRepository implements Constants {
 
             Connection.Response response = null;
             try {
-                response = Jsoup.connect(URLDecoder.decode(houseDetail.getUrl(), "UTF-8"))
+                String url = URLDecoder.decode(houseDetail.getUrl(), "UTF-8");
+
+                if (!url.startsWith("https://")) {
+                    url = HOST + url;
+                }
+
+                Log.d(TAG, "Detail House url : " + url);
+                response = Jsoup.connect(url)
                         .method(Connection.Method.GET)
                         .execute();
             } catch (IOException e) {
