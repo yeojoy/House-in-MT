@@ -60,6 +60,10 @@ public class HouseDetailNetworkRepository implements Constants {
                 return;
             }
 
+            if (detailDocument == null) {
+                return;
+            }
+
             Elements contents = detailDocument.select("div.content-view");
             Elements images = detailDocument.select("div.content-view > img");
 

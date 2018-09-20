@@ -1,6 +1,7 @@
 package me.yeojoy.hancahouse;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -158,18 +159,29 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
         spannableStringBuilder.append(" ");
 
         String phoneNumber = contents.substring(indexOfPhoneEnd, indexOfRegion);
-        phoneNumber = phoneNumber.trim();
-        if (Patterns.PHONE.matcher(phoneNumber).matches()) {
-            SpannableString phoneSpannableString = new SpannableString(phoneNumber);
+        String finalPhoneNumber = phoneNumber.trim();
+        if (Patterns.PHONE.matcher(finalPhoneNumber).matches()) {
+            SpannableString phoneSpannableString = new SpannableString(finalPhoneNumber);
             phoneSpannableString.setSpan(new ClickableSpan() {
                 @Override
                 public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + finalPhoneNumber));
+
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        try {
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException e) {
+                            Toast.makeText(DetailHouseActivity.this, R.string.warn_cannot_call, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
                     Toast.makeText(DetailHouseActivity.this, "phone", Toast.LENGTH_SHORT).show();
                 }
             }, 0, phoneSpannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannableStringBuilder.append(phoneSpannableString);
         } else {
-            spannableStringBuilder.append(phoneNumber);
+            spannableStringBuilder.append(finalPhoneNumber);
         }
 
         spannableStringBuilder.append(System.lineSeparator());

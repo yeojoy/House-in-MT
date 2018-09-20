@@ -30,10 +30,7 @@ public class MainViewModel extends AndroidViewModel {
     public void loadData(@Nullable Integer pageNumber) {
         int page = pageNumber == null ? 1 : pageNumber;
         HouseNetworkRepository networkRepository = HouseNetworkRepository.getInstance();
-        networkRepository.loadPage(page, data -> {
-            // mHouses.postValue(data);
-            saveDataToDatabase(data);
-        });
+        networkRepository.loadPage(page, data -> saveDataToDatabase(data));
     }
 
     private void saveDataToDatabase(List<House> houses) {

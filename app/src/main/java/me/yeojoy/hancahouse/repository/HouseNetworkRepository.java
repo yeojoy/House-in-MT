@@ -51,11 +51,20 @@ public class HouseNetworkRepository implements Constants {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            if (response == null) {
+                return;
+            }
+
             Document hancaDocument = null;
             try {
                 hancaDocument = response.parse();
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+
+            if (hancaDocument == null) {
+                return;
             }
 
             Elements thumbnails = hancaDocument.select("tbody > tr > td.kboard-list-thumbnail > a");
