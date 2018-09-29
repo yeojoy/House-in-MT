@@ -6,13 +6,17 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import me.yeojoy.hancahouse.model.House;
+import me.yeojoy.hancahouse.model.Sublet;
 
-@Database(entities = { House.class }, version =2)
+@Database(entities = { House.class, Sublet.class }, version = 2)
 public abstract class HancaDatabase extends RoomDatabase implements DBConstants {
 
     public abstract HouseDao houseDao();
+
+    public abstract SubletDao subletDao();
 
     private static HancaDatabase sInstance;
 

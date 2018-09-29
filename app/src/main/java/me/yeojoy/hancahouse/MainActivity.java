@@ -34,11 +34,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         FloatingActionButton floatingActionButton = findViewById(R.id.floating_action_button_refresh);
-        floatingActionButton.setOnClickListener(view -> mMainViewModel.loadData(1));
+        floatingActionButton.setOnClickListener(view -> mMainViewModel.loadHouses(1));
 
         // mModel = ViewModelProviders.of(this).get(NameViewModel.class);
         mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        mMainViewModel.loadData(1);
+        mMainViewModel.loadHouses(1);
 
         mMainViewModel.getHouses().observe(this, houses -> {
             Log.d(TAG, "=================================================================");

@@ -43,11 +43,15 @@ public class HouseNetworkRepository implements Constants {
     }
 
     public void loadPage(int page, OnLoadPageListener listener) {
+        loadPage(URL_FORMAT_FOR_RENT, page, listener);
+    }
+
+    public void loadPage(String pageUrl, int page, OnLoadPageListener listener) {
         Runnable network = () -> {
             Connection.Response response = null;
 
             try {
-                String url = URLDecoder.decode(URL_FORMAT, "UTF-8") + page;
+                String url = URLDecoder.decode(TextUtils.isEmpty(pageUrl) ? URL_FORMAT_FOR_RENT : pageUrl, "UTF-8") + page;
                 response = Jsoup.connect(url)
                         .method(Connection.Method.GET)
                         .execute();
@@ -133,7 +137,7 @@ public class HouseNetworkRepository implements Constants {
         thread.start();
     }
 
-    public interface OnLoadPageListener {
-        void onLoadPage(List<House> houses);
+    public interface OnLoadPageListener<T extends House> {
+        void onLoadPage(List<T> houses);
     }
 }

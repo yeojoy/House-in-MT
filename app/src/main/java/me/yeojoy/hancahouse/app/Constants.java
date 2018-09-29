@@ -7,7 +7,8 @@ public interface Constants {
     //            String URL =  "http://192.168.8.107:5000"; // egg
     String URL =  "http://192.168.1.136:5000"; // home network
 //            String URL =  "http://172.20.10.4:5000"; // iphone
-    String URL_FORMAT =  "https://hanca.com/%EA%B5%90%EB%AF%BC%EC%9E%A5%ED%84%B0/?category1=%EC%95%84%ED%8C%8C%ED%8A%B8%2F%EC%A7%91+%EB%A0%8C%ED%8A%B8&mod=list&pageid=";
+    String URL_FORMAT_FOR_RENT =  "https://hanca.com/%EA%B5%90%EB%AF%BC%EC%9E%A5%ED%84%B0/?category1=%EC%95%84%ED%8C%8C%ED%8A%B8%2F%EC%A7%91+%EB%A0%8C%ED%8A%B8&mod=list&pageid=";
+    String URL_FORMAT_FOR_SUBLET =  "https://hanca.com/%EA%B5%90%EB%AF%BC%EC%9E%A5%ED%84%B0/?category1=%EC%84%9C%EB%B8%8C%EB%A0%9B&mod=list&pageid=";
 
     String HOST = "https://hanca.com";
 
