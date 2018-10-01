@@ -3,7 +3,6 @@ package me.yeojoy.hancahouse.viewmodel;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -18,27 +17,25 @@ import me.yeojoy.hancahouse.repository.HouseNetworkRepository;
 public class MainViewModel extends AndroidViewModel {
     private static final String TAG = MainViewModel.class.getSimpleName();
 
-    private LiveData<List<House>> mHouses;
-    private LiveData<List<House>> mSublets;
+    private LiveData<List<House>> mRents;
 
     private HouseDBRepository mHouseDBRepository;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
         mHouseDBRepository = new HouseDBRepository(application);
-        mHouses = mHouseDBRepository.getAllHouses();
-        mSublets = mHouseDBRepository.getAllSublets();
+        mRents = mHouseDBRepository.getAllRents();
     }
 
     public void loadHouses(@Nullable Integer pageNumber) {
         int page = pageNumber == null ? 1 : pageNumber;
         HouseNetworkRepository networkRepository = HouseNetworkRepository.getInstance();
-        networkRepository.loadPage(HouseNetworkRepository.TYPE_RENT, page, this::saveHousesToDatabase);
+        networkRepository.loadPage(page, this::saveHousesToDatabase);
     }
 
     private void saveHousesToDatabase(List<House> houses) {
         Iterator<House> iterator = houses.iterator();
-        List<House> sources = mHouses.getValue();
+        List<House> sources = mRents.getValue();
         while (iterator.hasNext()) {
             House house = iterator.next();
             if (sources.contains(house)) {
@@ -52,44 +49,19 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
-    public LiveData<List<House>> getHouses() {
-        if (mHouses == null) {
-            mHouses = new MutableLiveData<>();
-        }
-        return mHouses;
-    }
-
-    public void loadSublets(@Nullable Integer pageNumber) {
-        int page = pageNumber == null ? 1 : pageNumber;
-        HouseNetworkRepository networkRepository = HouseNetworkRepository.getInstance();
-        networkRepository.loadPage(HouseNetworkRepository.TYPE_SUBLET, page, this::saveSubletsToDatabase);
-    }
-
-    private void saveSubletsToDatabase(List<House> sublets) {
-        Iterator<House> iterator = sublets.iterator();
-        List<House> sources = mSublets.getValue();
-        while (iterator.hasNext()) {
-            House house = iterator.next();
-            if (sources.contains(house)) {
-                Log.d(TAG, "UID, " + house.getUid() + ", is deleted.");
-                iterator.remove();
-            }
-        }
-
-        if (sublets.size() > 0) {
-            mHouseDBRepository.saveHouses(sublets);
-        }
-    }
-
-    public LiveData<List<House>> getSublets() {
-        if (mSublets == null) {
-            mSublets = new MutableLiveData<>();
-        }
-        return mSublets;
+    public LiveData<List<House>> getRents() {
+        return mRents;
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
+    }
+
+    /**
+     * Table에서 모든 집 정보 삭제
+     */
+    public void deleteAllFromTable() {
+        mHouseDBRepository.deleteAllFromTable();
     }
 }

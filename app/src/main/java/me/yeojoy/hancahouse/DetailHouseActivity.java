@@ -3,16 +3,13 @@ package me.yeojoy.hancahouse;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -85,8 +82,12 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
 
         if (!TextUtils.isEmpty(house.getThumbnailUrl()) &&
                 !house.getThumbnailUrl().equals(NO_IMAGE)) {
+
+            final String SIZE = "-120x90";
+            String imageUrl = house.getThumbnailUrl().replace(SIZE, "");
             GlideApp.with(this)
-                    .load(house.getThumbnailUrl())
+                    .load(imageUrl)
+                    .centerCrop()
                     .into(imageViewThumbnail);
         }
         textViewTitle.setText(house.getTitle());

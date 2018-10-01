@@ -14,22 +14,21 @@ public class HouseDBRepository {
     private static final String TAG = HouseDBRepository.class.getSimpleName();
 
     private HouseDao mHouseDao;
-    private LiveData<List<House>> mAllHouses;
-    private LiveData<List<House>> mAllSublets;
+    private LiveData<List<House>> mAllRents;
 
     public HouseDBRepository(Context context) {
         HancaDatabase db = HancaDatabase.getDatabase(context);
         mHouseDao = db.houseDao();
-        mAllHouses = mHouseDao.getAllHouses();
-        mAllSublets = mHouseDao.getAllSublets();
+        mAllRents = mHouseDao.getAllRents();
+    }
+
+    public LiveData<List<House>> getAllRents() {
+        return mAllRents;
     }
 
     ///////////////////////////////////////////////////////////
     // House
     ///////////////////////////////////////////////////////////
-    public LiveData<List<House>> getAllHouses() {
-        return mAllHouses;
-    }
 
     public void saveHouses(List<House> houses) {
         House[] houseArray = new House[houses.size()];
@@ -41,6 +40,10 @@ public class HouseDBRepository {
         House[] houseArray = new House[houses.size()];
         houses.toArray(houseArray);
         new UpdateAsyncTask(mHouseDao).execute(houseArray);
+    }
+
+    public void deleteAllFromTable() {
+        new DeleteAsyncTask(mHouseDao).execute();
     }
 
     private static class InsertAsyncTask extends AsyncTask<House, Void, Void> {
@@ -72,11 +75,18 @@ public class HouseDBRepository {
         }
     }
 
-    ///////////////////////////////////////////////////////////
-    // Sublet
-    ///////////////////////////////////////////////////////////
+    private static class DeleteAsyncTask extends AsyncTask<Void, Void, Void> {
+        private HouseDao mHouseDao;
 
-    public LiveData<List<House>> getAllSublets() {
-        return mAllSublets;
+        DeleteAsyncTask(HouseDao houseDao) {
+            mHouseDao = houseDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mHouseDao.deleteAll();
+            return null;
+        }
     }
+
 }

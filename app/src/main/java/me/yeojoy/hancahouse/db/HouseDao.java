@@ -28,4 +28,7 @@ public interface HouseDao {
     @Query("SELECT * FROM " + DBConstants.TABLE_NAME + " ORDER BY uid DESC")
     LiveData<List<House>> getAllHouses();
 
+    @Query("DELETE FROM " + DBConstants.TABLE_NAME)
+    void deleteAll();
+
 }

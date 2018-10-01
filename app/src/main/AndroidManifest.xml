@@ -29,7 +29,14 @@
             android:theme="@style/AppTheme.DetailActivity" />
         <activity android:name=".SettingActivity" />
 
-        <service android:name=".app.CrawlerService" />
+        <receiver android:name=".app.AlarmBroadcaseReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+
+        </receiver>
     </application>
 
 </manifest>

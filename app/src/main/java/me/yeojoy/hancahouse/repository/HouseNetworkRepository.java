@@ -45,17 +45,13 @@ public class HouseNetworkRepository implements Constants {
 
     }
 
-    public void loadPage(int type, int page, OnLoadPageListener listener) {
-
-        if (type != TYPE_RENT && type != TYPE_SUBLET) {
-            throw new IllegalArgumentException("Type is only 1 or 2.");
-        }
+    public void loadPage(int page, OnLoadPageListener listener) {
 
         Runnable network = () -> {
             Connection.Response response = null;
 
             try {
-                String url = URLDecoder.decode(type == 1 ? URL_FORMAT_FOR_RENT : URL_FORMAT_FOR_SUBLET, "UTF-8") + page;
+                String url = URLDecoder.decode(URL_FORMAT_FOR_RENT, "UTF-8") + page;
                 response = Jsoup.connect(url)
                         .method(Connection.Method.GET)
                         .execute();
@@ -94,9 +90,7 @@ public class HouseNetworkRepository implements Constants {
                 Element dateElement = dates.get(i);
 
                 String thumbnailUrl = thumbnailElement.select("img").attr("src");
-                if (!TextUtils.isEmpty(thumbnailUrl)) {
-                    thumbnailUrl = URL + thumbnailUrl.substring(1);
-                } else {
+                if (TextUtils.isEmpty(thumbnailUrl)) {
                     thumbnailUrl = NO_IMAGE;
                 }
 
@@ -120,13 +114,84 @@ public class HouseNetworkRepository implements Constants {
                 String parsedTime = new SimpleDateFormat(Constants.PARSED_TIME_FORMATTER, Locale.getDefault()).format(nowDate);
 
                 House house = new House(title, thumbnailUrl, detailUrl, author,
-                        date != null ? date.getTime() : 0, parsedTime, Integer.parseInt(uid), type == TYPE_RENT ? (byte) 1: (byte) 2);
+                        date != null ? date.getTime() : 0, parsedTime, Integer.parseInt(uid), (byte) 1);
                 Log.d(TAG, i + " >>> " + house.toString());
 
                 houses.add(house);
 
             }
+
             Log.d(TAG, "=================================================================");
+            try {
+                String url = URLDecoder.decode(URL_FORMAT_FOR_SUBLET, "UTF-8") + page;
+                response = Jsoup.connect(url)
+                        .method(Connection.Method.GET)
+                        .execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (response == null) {
+                return;
+            }
+
+            hancaDocument = null;
+            try {
+                hancaDocument = response.parse();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (hancaDocument == null) {
+                return;
+            }
+
+            thumbnails = hancaDocument.select("tbody > tr > td.kboard-list-thumbnail > a");
+            titles = hancaDocument.select("tbody > tr > td.kboard-list-title > a");
+            dates = hancaDocument.select("tbody > tr > td.kboard-list-date");
+            // authors = soup.select('tbody > tr > td.kboard-list-user')
+            authors = hancaDocument.select("tbody > tr > td.kboard-list-user");
+
+            Log.d(TAG, "*****************************************************************");
+
+            for (int i = 0, j = thumbnails.size(); i < j; i++) {
+                Element thumbnailElement = thumbnails.get(i);
+                Element titleElement = titles.get(i);
+                Element dateElement = dates.get(i);
+
+                String thumbnailUrl = thumbnailElement.select("img").attr("src");
+                if (TextUtils.isEmpty(thumbnailUrl)) {
+                    thumbnailUrl = NO_IMAGE;
+                }
+
+                String detailUrl = thumbnailElement.attr("href");
+                int uidIndex = detailUrl.indexOf("uid=");
+
+                String uid = detailUrl.substring(uidIndex + 4);
+
+                String title = titleElement.text();
+                String author = authors.get(i).text();
+                String dateString = dateElement.text();
+                SimpleDateFormat formatter = new SimpleDateFormat(Constants.WEB_DATE_FORMATTER, Locale.getDefault());
+                Date date = null;
+                try {
+                    date = formatter.parse(dateString);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                Date nowDate = new Date();
+                String parsedTime = new SimpleDateFormat(Constants.PARSED_TIME_FORMATTER, Locale.getDefault()).format(nowDate);
+
+                House house = new House(title, thumbnailUrl, detailUrl, author,
+                        date != null ? date.getTime() : 0, parsedTime, Integer.parseInt(uid), (byte) 2);
+                Log.d(TAG, i + " >>> " + house.toString());
+
+                houses.add(house);
+
+            }
+            Log.d(TAG, "*****************************************************************");
+
 
             if (listener != null) {
                 listener.onLoadPage(houses);

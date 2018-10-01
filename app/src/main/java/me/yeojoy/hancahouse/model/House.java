@@ -161,7 +161,7 @@ public class House implements Parcelable {
         if (this == o) return true;
         if (!(o instanceof House)) return false;
         House house = (House) o;
-        return getUid() == house.getUid() && getType() == house.getType();
+        return getUid() == house.getUid();
     }
 
     @Override

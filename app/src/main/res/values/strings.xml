@@ -6,5 +6,7 @@
     <string name="notification_title">한카 렌트</string>
     <string name="notification_content" formatted="false">%d개의 집이 새롭게 올라왔습니다.</string>
 
+    <!-- menu title -->
     <string name="start_crawler">시작</string>
+    <string name="delete_all_from_table">모두 삭제</string>
 </resources>
