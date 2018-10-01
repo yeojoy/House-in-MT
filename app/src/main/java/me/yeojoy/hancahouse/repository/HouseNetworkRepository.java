@@ -24,6 +24,9 @@ import me.yeojoy.hancahouse.model.House;
 public class HouseNetworkRepository implements Constants {
     private static final String TAG = HouseNetworkRepository.class.getSimpleName();
 
+    public static final int TYPE_RENT = 1;
+    public static final int TYPE_SUBLET = 2;
+
     private static HouseNetworkRepository sInstance;
 
     public static HouseNetworkRepository getInstance() {
@@ -42,16 +45,17 @@ public class HouseNetworkRepository implements Constants {
 
     }
 
-    public void loadPage(int page, OnLoadPageListener listener) {
-        loadPage(URL_FORMAT_FOR_RENT, page, listener);
-    }
+    public void loadPage(int type, int page, OnLoadPageListener listener) {
 
-    public void loadPage(String pageUrl, int page, OnLoadPageListener listener) {
+        if (type != TYPE_RENT && type != TYPE_SUBLET) {
+            throw new IllegalArgumentException("Type is only 1 or 2.");
+        }
+
         Runnable network = () -> {
             Connection.Response response = null;
 
             try {
-                String url = URLDecoder.decode(TextUtils.isEmpty(pageUrl) ? URL_FORMAT_FOR_RENT : pageUrl, "UTF-8") + page;
+                String url = URLDecoder.decode(type == 1 ? URL_FORMAT_FOR_RENT : URL_FORMAT_FOR_SUBLET, "UTF-8") + page;
                 response = Jsoup.connect(url)
                         .method(Connection.Method.GET)
                         .execute();
@@ -81,7 +85,9 @@ public class HouseNetworkRepository implements Constants {
             Elements authors = hancaDocument.select("tbody > tr > td.kboard-list-user");
 
             Log.d(TAG, "=================================================================");
+
             List<House> houses = new ArrayList<>();
+
             for (int i = 0, j = thumbnails.size(); i < j; i++) {
                 Element thumbnailElement = thumbnails.get(i);
                 Element titleElement = titles.get(i);
@@ -110,17 +116,12 @@ public class HouseNetworkRepository implements Constants {
                     e.printStackTrace();
                 }
 
-                Log.d(TAG, "thumbnail > " + thumbnailUrl);
-                Log.d(TAG, "url > " + detailUrl);
-                Log.d(TAG, "title > " + title);
-                Log.d(TAG, "author > " + author);
-                Log.d(TAG, "date > " + dateString + ", milliseconds > " + (date != null ? date.getTime() : 0));
-                Log.d(TAG, "uid > " + uid);
-//                Log.d(TAG, "thumbnail > " + thumbnail.toString());
-//                Log.d(TAG, "title > " + title.toString());
-//                Log.d(TAG, "date > " + date.toString());
+                Date nowDate = new Date();
+                String parsedTime = new SimpleDateFormat(Constants.PARSED_TIME_FORMATTER, Locale.getDefault()).format(nowDate);
+
                 House house = new House(title, thumbnailUrl, detailUrl, author,
-                        date != null ? date.getTime() : 0, Integer.parseInt(uid));
+                        date != null ? date.getTime() : 0, parsedTime, Integer.parseInt(uid), type == TYPE_RENT ? (byte) 1: (byte) 2);
+                Log.d(TAG, i + " >>> " + house.toString());
 
                 houses.add(house);
 
@@ -137,7 +138,7 @@ public class HouseNetworkRepository implements Constants {
         thread.start();
     }
 
-    public interface OnLoadPageListener<T extends House> {
-        void onLoadPage(List<T> houses);
+    public interface OnLoadPageListener {
+        void onLoadPage(List<House> houses);
     }
 }

@@ -39,19 +39,28 @@ public class House implements Parcelable {
     @ColumnInfo(name = "date")
     private long mDate;
 
+    @ColumnInfo(name = "parsed_time")
+    private String mParsedTime;
+
     /**
      * unique id in board
      */
     @ColumnInfo(name = "uid")
     private long mUid;
 
-    public House(@NonNull String title, @NonNull String thumbnailUrl, @NonNull String url, String author, long date, long uid) {
+    @ColumnInfo(name = "type")
+    private byte mType;
+
+    public House(@NonNull String title, @NonNull String thumbnailUrl, @NonNull String url,
+                 String author, long date, String parsedTime, long uid, byte type) {
         mTitle = title;
         mThumbnailUrl = thumbnailUrl;
         mUrl = url;
         mAuthor = author;
         mDate = date;
+        mParsedTime = parsedTime;
         mUid = uid;
+        mType = type;
     }
 
     private House(Parcel in) {
@@ -61,7 +70,9 @@ public class House implements Parcelable {
         mUrl = in.readString();
         mAuthor = in.readString();
         mDate = in.readLong();
+        mParsedTime = in.readString();
         mUid = in.readLong();
+        mType = in.readByte();
     }
 
     public static final Creator<House> CREATOR = new Creator<House>() {
@@ -100,8 +111,16 @@ public class House implements Parcelable {
         return mDate;
     }
 
+    public String getParsedTime() {
+        return mParsedTime;
+    }
+
     public long getUid() {
         return mUid;
+    }
+
+    public byte getType() {
+        return mType;
     }
 
     @Override
@@ -117,7 +136,9 @@ public class House implements Parcelable {
         parcel.writeString(mUrl);
         parcel.writeString(mAuthor);
         parcel.writeLong(mDate);
+        parcel.writeString(mParsedTime);
         parcel.writeLong(mUid);
+        parcel.writeByte(mType);
     }
 
     @Override
@@ -129,7 +150,9 @@ public class House implements Parcelable {
                 ", mUrl='" + mUrl + '\'' +
                 ", mAuthor='" + mAuthor + '\'' +
                 ", mDate=" + mDate +
+                ", mParsedTime='" + mParsedTime + '\'' +
                 ", mUid=" + mUid +
+                ", mType=" + mType +
                 '}';
     }
 
@@ -138,7 +161,7 @@ public class House implements Parcelable {
         if (this == o) return true;
         if (!(o instanceof House)) return false;
         House house = (House) o;
-        return getUid() == house.getUid();
+        return getUid() == house.getUid() && getType() == house.getType();
     }
 
     @Override

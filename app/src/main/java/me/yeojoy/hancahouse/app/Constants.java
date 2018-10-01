@@ -19,5 +19,7 @@ public interface Constants {
     String TITLE_EMAIL = "E-mail:";
     String TITLE_PHONE = "전화번호:";
     String TITLE_REGION = "지역:";
+
+    String PARSED_TIME_FORMATTER = "yyyyMMDD_HHmmss";
 }
 

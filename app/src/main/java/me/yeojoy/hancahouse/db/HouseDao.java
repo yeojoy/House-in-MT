@@ -19,6 +19,13 @@ public interface HouseDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(House... house);
 
+    @Query("SELECT * FROM " + DBConstants.TABLE_NAME + " WHERE type = 1 ORDER BY uid DESC")
+    LiveData<List<House>> getAllRents();
+
+    @Query("SELECT * FROM " + DBConstants.TABLE_NAME + " WHERE type = 2 ORDER BY uid DESC")
+    LiveData<List<House>> getAllSublets();
+
     @Query("SELECT * FROM " + DBConstants.TABLE_NAME + " ORDER BY uid DESC")
     LiveData<List<House>> getAllHouses();
+
 }

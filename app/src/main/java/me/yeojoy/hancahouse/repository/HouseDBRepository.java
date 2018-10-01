@@ -8,23 +8,20 @@ import java.util.List;
 
 import me.yeojoy.hancahouse.db.HancaDatabase;
 import me.yeojoy.hancahouse.db.HouseDao;
-import me.yeojoy.hancahouse.db.SubletDao;
 import me.yeojoy.hancahouse.model.House;
-import me.yeojoy.hancahouse.model.Sublet;
 
 public class HouseDBRepository {
     private static final String TAG = HouseDBRepository.class.getSimpleName();
 
     private HouseDao mHouseDao;
-    private SubletDao mSubletDao;
     private LiveData<List<House>> mAllHouses;
-    private LiveData<List<Sublet>> mAllSublets;
+    private LiveData<List<House>> mAllSublets;
 
     public HouseDBRepository(Context context) {
         HancaDatabase db = HancaDatabase.getDatabase(context);
         mHouseDao = db.houseDao();
-        mSubletDao = db.subletDao();
         mAllHouses = mHouseDao.getAllHouses();
+        mAllSublets = mHouseDao.getAllSublets();
     }
 
     ///////////////////////////////////////////////////////////
@@ -79,48 +76,7 @@ public class HouseDBRepository {
     // Sublet
     ///////////////////////////////////////////////////////////
 
-    public LiveData<List<Sublet>> getAllSublets() {
+    public LiveData<List<House>> getAllSublets() {
         return mAllSublets;
-    }
-
-    public void saveSublets(List<Sublet> sublets) {
-        Sublet[] subletArray = new Sublet[sublets.size()];
-        sublets.toArray(subletArray);
-        new InsertSubletAsyncTask(mSubletDao).execute(subletArray);
-    }
-
-    public void updateSublets(List<Sublet> sublets) {
-        Sublet[] subletArray = new Sublet[sublets.size()];
-        sublets.toArray(subletArray);
-        new UpdateSubletAsyncTask(mSubletDao).execute(subletArray);
-    }
-
-    private static class InsertSubletAsyncTask extends AsyncTask<Sublet, Void, Void> {
-
-        private SubletDao mSublectDao;
-
-        InsertSubletAsyncTask(SubletDao houseDao) {
-            mSublectDao = houseDao;
-        }
-
-        @Override
-        protected Void doInBackground(Sublet... sublets) {
-            mSublectDao.insert(sublets);
-            return null;
-        }
-    }
-
-    private static class UpdateSubletAsyncTask extends AsyncTask<Sublet, Void, Void> {
-        private SubletDao mSublectDao;
-
-        UpdateSubletAsyncTask(SubletDao houseDao) {
-            mSublectDao = houseDao;
-        }
-
-        @Override
-        protected Void doInBackground(Sublet... sublets) {
-            mSublectDao.update(sublets);
-            return null;
-        }
     }
 }
