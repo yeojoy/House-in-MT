@@ -25,6 +25,8 @@ import java.util.Locale;
 import me.yeojoy.hancahouse.BuildConfig;
 import me.yeojoy.hancahouse.MainActivity;
 import me.yeojoy.hancahouse.R;
+import me.yeojoy.hancahouse.db.HancaDatabase;
+import me.yeojoy.hancahouse.db.HouseDao;
 import me.yeojoy.hancahouse.model.House;
 import me.yeojoy.hancahouse.repository.HouseDBRepository;
 import me.yeojoy.hancahouse.repository.HouseNetworkRepository;
@@ -43,6 +45,7 @@ public class AlarmBroadcaseReceiver extends BroadcastReceiver {
         Log.d(TAG, "***************************************************************************");
         Log.d(TAG, "***************************************************************************");
         mHouseDBRepository = new HouseDBRepository(context.getApplicationContext());
+
         startCrawling(context);
     }
 
@@ -59,13 +62,15 @@ public class AlarmBroadcaseReceiver extends BroadcastReceiver {
 //        handler.post(() -> {
 //        });
 
-        List<House> allHouses = mHouseDBRepository.getAllRents().getValue();
-
 //        HancaDatabase db = HancaDatabase.getDatabase(context);
 //        HouseDao houseDao = db.houseDao();
 //        List<House> allHouses = houseDao.getAllRawRents();
 
-        if (allHouses == null || allHouses.size() < 1) {
+        HancaDatabase hancaDatabase = HancaDatabase.getDatabase(context);
+        HouseDao houseDao = hancaDatabase.houseDao();
+        List<House> mAllHouses = houseDao.getAllRawRents();
+
+        if (mAllHouses == null || mAllHouses.size() < 1) {
             Log.e(TAG, "There is no house.");
             return;
         }
@@ -73,10 +78,15 @@ public class AlarmBroadcaseReceiver extends BroadcastReceiver {
         Iterator<House> iterator = houses.iterator();
         while (iterator.hasNext()) {
             House house = iterator.next();
-            if (allHouses.contains(house)) {
+            if (mAllHouses.contains(house)) {
                 Log.d(TAG, "UID, " + house.getUid() + ", is deleted.");
                 iterator.remove();
             }
+        }
+
+        if (houses.size() < 1) {
+            Log.e(TAG, "There is no new house.");
+            return;
         }
 
         Log.d(TAG, "***************************************************************************");

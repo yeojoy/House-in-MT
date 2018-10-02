@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         if (manager != null) {
             manager.cancel(pendingIntent);
             manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 0,
-                    DateUtils.HOUR_IN_MILLIS * 2, pendingIntent);
+                    DateUtils.HOUR_IN_MILLIS * 3, pendingIntent);
         }
     }
 
