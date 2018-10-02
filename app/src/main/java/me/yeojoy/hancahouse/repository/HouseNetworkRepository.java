@@ -19,13 +19,11 @@ import java.util.List;
 import java.util.Locale;
 
 import me.yeojoy.hancahouse.app.Constants;
+import me.yeojoy.hancahouse.db.DBConstants;
 import me.yeojoy.hancahouse.model.House;
 
-public class HouseNetworkRepository implements Constants {
+public class HouseNetworkRepository implements Constants, DBConstants {
     private static final String TAG = HouseNetworkRepository.class.getSimpleName();
-
-    public static final int TYPE_RENT = 1;
-    public static final int TYPE_SUBLET = 2;
 
     private static HouseNetworkRepository sInstance;
 
@@ -48,150 +46,85 @@ public class HouseNetworkRepository implements Constants {
     public void loadPage(int page, OnLoadPageListener listener) {
 
         Runnable network = () -> {
-            Connection.Response response = null;
-
-            try {
-                String url = URLDecoder.decode(URL_FORMAT_FOR_RENT, "UTF-8") + page;
-                response = Jsoup.connect(url)
-                        .method(Connection.Method.GET)
-                        .execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (response == null) {
-                return;
-            }
-
-            Document hancaDocument = null;
-            try {
-                hancaDocument = response.parse();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (hancaDocument == null) {
-                return;
-            }
-
-            Elements thumbnails = hancaDocument.select("tbody > tr > td.kboard-list-thumbnail > a");
-            Elements titles = hancaDocument.select("tbody > tr > td.kboard-list-title > a");
-            Elements dates = hancaDocument.select("tbody > tr > td.kboard-list-date");
-            // authors = soup.select('tbody > tr > td.kboard-list-user')
-            Elements authors = hancaDocument.select("tbody > tr > td.kboard-list-user");
-
-            Log.d(TAG, "=================================================================");
-
             List<House> houses = new ArrayList<>();
 
-            for (int i = 0, j = thumbnails.size(); i < j; i++) {
-                Element thumbnailElement = thumbnails.get(i);
-                Element titleElement = titles.get(i);
-                Element dateElement = dates.get(i);
-
-                String thumbnailUrl = thumbnailElement.select("img").attr("src");
-                if (TextUtils.isEmpty(thumbnailUrl)) {
-                    thumbnailUrl = NO_IMAGE;
-                }
-
-                String detailUrl = thumbnailElement.attr("href");
-                int uidIndex = detailUrl.indexOf("uid=");
-
-                String uid = detailUrl.substring(uidIndex + 4);
-
-                String title = titleElement.text();
-                String author = authors.get(i).text();
-                String dateString = dateElement.text();
-                SimpleDateFormat formatter = new SimpleDateFormat(Constants.WEB_DATE_FORMATTER, Locale.getDefault());
-                Date date = null;
+            for (int index = 0, loopTime = 2; index < loopTime; index++) {
+                Connection.Response response = null;
                 try {
-                    date = formatter.parse(dateString);
-                } catch (ParseException e) {
+                    String url = URLDecoder.decode(index == 0 ? URL_FORMAT_FOR_RENT : URL_FORMAT_FOR_SUBLET, "UTF-8") + page;
+                    response = Jsoup.connect(url)
+                            .method(Connection.Method.GET)
+                            .execute();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                Date nowDate = new Date();
-                String parsedTime = new SimpleDateFormat(Constants.PARSED_TIME_FORMATTER, Locale.getDefault()).format(nowDate);
-
-                House house = new House(title, thumbnailUrl, detailUrl, author,
-                        date != null ? date.getTime() : 0, parsedTime, Integer.parseInt(uid), (byte) 1);
-                Log.d(TAG, i + " >>> " + house.toString());
-
-                houses.add(house);
-
-            }
-
-            Log.d(TAG, "=================================================================");
-            try {
-                String url = URLDecoder.decode(URL_FORMAT_FOR_SUBLET, "UTF-8") + page;
-                response = Jsoup.connect(url)
-                        .method(Connection.Method.GET)
-                        .execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (response == null) {
-                return;
-            }
-
-            hancaDocument = null;
-            try {
-                hancaDocument = response.parse();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (hancaDocument == null) {
-                return;
-            }
-
-            thumbnails = hancaDocument.select("tbody > tr > td.kboard-list-thumbnail > a");
-            titles = hancaDocument.select("tbody > tr > td.kboard-list-title > a");
-            dates = hancaDocument.select("tbody > tr > td.kboard-list-date");
-            // authors = soup.select('tbody > tr > td.kboard-list-user')
-            authors = hancaDocument.select("tbody > tr > td.kboard-list-user");
-
-            Log.d(TAG, "*****************************************************************");
-
-            for (int i = 0, j = thumbnails.size(); i < j; i++) {
-                Element thumbnailElement = thumbnails.get(i);
-                Element titleElement = titles.get(i);
-                Element dateElement = dates.get(i);
-
-                String thumbnailUrl = thumbnailElement.select("img").attr("src");
-                if (TextUtils.isEmpty(thumbnailUrl)) {
-                    thumbnailUrl = NO_IMAGE;
+                if (response == null) {
+                    continue;
                 }
 
-                String detailUrl = thumbnailElement.attr("href");
-                int uidIndex = detailUrl.indexOf("uid=");
-
-                String uid = detailUrl.substring(uidIndex + 4);
-
-                String title = titleElement.text();
-                String author = authors.get(i).text();
-                String dateString = dateElement.text();
-                SimpleDateFormat formatter = new SimpleDateFormat(Constants.WEB_DATE_FORMATTER, Locale.getDefault());
-                Date date = null;
+                Document hancaDocument = null;
                 try {
-                    date = formatter.parse(dateString);
-                } catch (ParseException e) {
+                    hancaDocument = response.parse();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                Date nowDate = new Date();
-                String parsedTime = new SimpleDateFormat(Constants.PARSED_TIME_FORMATTER, Locale.getDefault()).format(nowDate);
+                if (hancaDocument == null) {
+                    continue;
+                }
 
-                House house = new House(title, thumbnailUrl, detailUrl, author,
-                        date != null ? date.getTime() : 0, parsedTime, Integer.parseInt(uid), (byte) 2);
-                Log.d(TAG, i + " >>> " + house.toString());
+                Elements thumbnails = hancaDocument.select(SELECT_THUMBNAILS);
+                Elements titles = hancaDocument.select(SELECT_TITLES);
+                Elements dates = hancaDocument.select(SELECT_DATES);
+                Elements authors = hancaDocument.select(SELECT_AUTHORS);
 
-                houses.add(house);
+                Log.d(TAG, index == 0 ?
+                        "=================================================================" :
+                        "*****************************************************************"
+                );
 
+                for (int i = 0, j = thumbnails.size(); i < j; i++) {
+                    Element thumbnailElement = thumbnails.get(i);
+                    Element titleElement = titles.get(i);
+                    Element dateElement = dates.get(i);
+
+                    String thumbnailUrl = thumbnailElement.select(SELECT_IMAGES).attr(ATTR_SOURCE);
+                    if (TextUtils.isEmpty(thumbnailUrl)) {
+                        thumbnailUrl = NO_IMAGE;
+                    }
+
+                    String detailUrl = thumbnailElement.attr(ATTR_HREF);
+                    int uidIndex = detailUrl.indexOf(TEXT_UID);
+
+                    String uid = detailUrl.substring(uidIndex + TEXT_UID.length());
+
+                    String title = titleElement.text();
+                    String author = authors.get(i).text();
+                    String dateString = dateElement.text();
+                    SimpleDateFormat formatter = new SimpleDateFormat(Constants.WEB_DATE_FORMATTER, Locale.getDefault());
+                    Date date = null;
+                    try {
+                        date = formatter.parse(dateString);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    Date nowDate = new Date();
+                    String parsedTime = new SimpleDateFormat(Constants.PARSED_TIME_FORMATTER, Locale.getDefault()).format(nowDate);
+
+                    House house = new House(title, thumbnailUrl, detailUrl, author,
+                            date != null ? date.getTime() : 0, parsedTime, Integer.parseInt(uid), index == 0 ? TYPE_RENT : TYPE_SUBLET);
+                    Log.d(TAG, i + " >>> " + house.toString());
+
+                    houses.add(house);
+                }
+
+                Log.d(TAG, index == 0 ?
+                        "=================================================================" :
+                        "*****************************************************************"
+                );
             }
-            Log.d(TAG, "*****************************************************************");
-
 
             if (listener != null) {
                 listener.onLoadPage(houses);

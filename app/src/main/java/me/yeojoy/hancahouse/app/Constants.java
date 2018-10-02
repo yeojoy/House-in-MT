@@ -19,5 +19,22 @@ public interface Constants {
 
     /* SharedPreferences Key */
     String KEY_INITIALIZE_PAGE = "key_first_run__";
-}
 
+    /* JSoup select */
+    String SELECT_THUMBNAILS = "tbody > tr > td.kboard-list-thumbnail > a";
+    String SELECT_TITLES = "tbody > tr > td.kboard-list-title > a";
+    String SELECT_DATES = "tbody > tr > td.kboard-list-date";
+    String SELECT_AUTHORS = "tbody > tr > td.kboard-list-user";
+    String SELECT_IMAGES = "img";
+
+    String SELECT_DETAIL_CONTENTS = "div.content-view";
+    String SELECT_DETAIL_IMAGES = "div.content-view > img";
+
+    String ATTR_SOURCE = "src";
+    String ATTR_HREF = "href";
+
+    String NODE_NAME_IMAGE = "img";
+    String NODE_NEW_LINE = "<br>";
+
+    String TEXT_UID = "uid=";
+}

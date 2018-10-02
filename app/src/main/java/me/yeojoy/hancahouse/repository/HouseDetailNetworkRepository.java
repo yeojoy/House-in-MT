@@ -71,8 +71,8 @@ public class HouseDetailNetworkRepository implements Constants {
                 return;
             }
 
-            Elements contents = detailDocument.select("div.content-view");
-            Elements images = detailDocument.select("div.content-view > img");
+            Elements contents = detailDocument.select(SELECT_DETAIL_CONTENTS);
+            Elements images = detailDocument.select(SELECT_DETAIL_IMAGES);
 
             Log.d(TAG, "contents > " + contents.toString());
 
@@ -81,12 +81,12 @@ public class HouseDetailNetworkRepository implements Constants {
             List<Node> childNodes = contents.get(0).childNodes();
 
             for (Node node : childNodes) {
-                if (node.nodeName().equals("img")) {
+                if (node.nodeName().equals(NODE_NAME_IMAGE)) {
                     continue;
                 }
 
                 String text = node.toString();
-                if (text.equals("<br>")) {
+                if (text.equals(NODE_NEW_LINE)) {
                     text = System.lineSeparator();
                 } else if (text.equals(" ")) {
                     continue;
@@ -101,7 +101,7 @@ public class HouseDetailNetworkRepository implements Constants {
 
             List<String> imageUrls = new ArrayList<>();
             for (Element e : images) {
-                imageUrls.add(e.attr("src"));
+                imageUrls.add(e.attr(ATTR_SOURCE));
             }
 
             Log.d(TAG, "content > " + contentStringBuilder.toString());

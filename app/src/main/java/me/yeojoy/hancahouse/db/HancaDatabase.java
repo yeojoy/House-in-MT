@@ -10,14 +10,14 @@ import android.support.annotation.NonNull;
 
 import me.yeojoy.hancahouse.model.House;
 
-@Database(entities = { House.class}, version = 3)
+@Database(entities = { House.class }, version = 3)
 public abstract class HancaDatabase extends RoomDatabase implements DBConstants {
 
     public abstract HouseDao houseDao();
 
     private static HancaDatabase sInstance;
 
-    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+    private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE " + TABLE_NAME
@@ -25,13 +25,13 @@ public abstract class HancaDatabase extends RoomDatabase implements DBConstants 
         }
     };
 
-    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+    private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE " + TABLE_NAME
-                    + " ADD COLUMN parsed_time TEXT");
+                    + " ADD COLUMN board_type INTEGER DEFAULT 1 NOT NULL");
             database.execSQL("ALTER TABLE " + TABLE_NAME
-                    + " ADD COLUMN type BYTE");
+                    + " ADD COLUMN parsed_time TEXT");
         }
     };
 
@@ -41,8 +41,7 @@ public abstract class HancaDatabase extends RoomDatabase implements DBConstants 
                 if (sInstance == null) {
                     sInstance = Room.databaseBuilder(context.getApplicationContext(),
                             HancaDatabase.class, DATABASE_NAME)
-                            .addMigrations(MIGRATION_1_2)
-                            .addMigrations(MIGRATION_2_3)
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                             .build();
                 }
             }

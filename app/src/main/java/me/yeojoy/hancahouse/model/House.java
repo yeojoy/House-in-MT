@@ -48,11 +48,11 @@ public class House implements Parcelable {
     @ColumnInfo(name = "uid")
     private long mUid;
 
-    @ColumnInfo(name = "type")
-    private byte mType;
+    @ColumnInfo(name = "board_type")
+    private int mBoardType;
 
     public House(@NonNull String title, @NonNull String thumbnailUrl, @NonNull String url,
-                 String author, long date, String parsedTime, long uid, byte type) {
+                 String author, long date, String parsedTime, long uid, int boardType) {
         mTitle = title;
         mThumbnailUrl = thumbnailUrl;
         mUrl = url;
@@ -60,7 +60,7 @@ public class House implements Parcelable {
         mDate = date;
         mParsedTime = parsedTime;
         mUid = uid;
-        mType = type;
+        mBoardType = boardType;
     }
 
     private House(Parcel in) {
@@ -72,7 +72,7 @@ public class House implements Parcelable {
         mDate = in.readLong();
         mParsedTime = in.readString();
         mUid = in.readLong();
-        mType = in.readByte();
+        mBoardType = in.readInt();
     }
 
     public static final Creator<House> CREATOR = new Creator<House>() {
@@ -119,8 +119,8 @@ public class House implements Parcelable {
         return mUid;
     }
 
-    public byte getType() {
-        return mType;
+    public int getBoardType() {
+        return mBoardType;
     }
 
     @Override
@@ -138,7 +138,7 @@ public class House implements Parcelable {
         parcel.writeLong(mDate);
         parcel.writeString(mParsedTime);
         parcel.writeLong(mUid);
-        parcel.writeByte(mType);
+        parcel.writeInt(mBoardType);
     }
 
     @Override
@@ -152,7 +152,7 @@ public class House implements Parcelable {
                 ", mDate=" + mDate +
                 ", mParsedTime='" + mParsedTime + '\'' +
                 ", mUid=" + mUid +
-                ", mType=" + mType +
+                ", mBoardType=" + mBoardType +
                 '}';
     }
 

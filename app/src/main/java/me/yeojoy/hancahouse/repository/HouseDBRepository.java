@@ -26,10 +26,6 @@ public class HouseDBRepository {
         return mAllRents;
     }
 
-    ///////////////////////////////////////////////////////////
-    // House
-    ///////////////////////////////////////////////////////////
-
     public void saveHouses(List<House> houses) {
         House[] houseArray = new House[houses.size()];
         houses.toArray(houseArray);
