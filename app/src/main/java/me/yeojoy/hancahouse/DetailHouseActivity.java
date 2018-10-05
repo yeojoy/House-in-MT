@@ -19,6 +19,8 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,9 +99,24 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_detail, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
+            return true;
+        } else if (item.getItemId() == R.id.go_web_page) {
+            String url = mDetailViewModel.getHouseDetailLiveData().getValue().getUrl();
+            Log.d(TAG, "url : " + url);
+
+            Intent intent = new Intent(this, WebActivity.class);
+            intent.putExtra(KEY_INTENT_URL, url);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -166,8 +183,6 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
                     Intent intent = new Intent(Intent.ACTION_SENDTO);
                     intent.setData(Uri.parse("mailto:")); // only email apps should handle this
                     intent.putExtra(Intent.EXTRA_EMAIL, new String[] { emailSpannableString.toString() });
-
-//                intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 
                     if (intent.resolveActivity(getPackageManager()) != null) {
                         startActivity(intent);

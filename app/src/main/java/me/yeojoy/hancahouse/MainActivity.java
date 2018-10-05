@@ -1,32 +1,29 @@
 package me.yeojoy.hancahouse;
 
 import android.app.ActivityOptions;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-import me.yeojoy.hancahouse.app.AlarmBroadcaseReceiver;
 import me.yeojoy.hancahouse.app.Constants;
 import me.yeojoy.hancahouse.app.adapter.HouseAdapter;
 import me.yeojoy.hancahouse.model.House;
+import me.yeojoy.hancahouse.util.AlarmUtil;
 import me.yeojoy.hancahouse.util.PreferenceUtil;
 import me.yeojoy.hancahouse.view.MainView;
 import me.yeojoy.hancahouse.viewmodel.MainViewModel;
 
-public class MainActivity extends AppCompatActivity implements MainView {
+public class MainActivity extends AppCompatActivity implements MainView, Constants {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -60,6 +57,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
         });
 
         loadHouses();
+
+        if (PreferenceUtil.getInstance(this).getInt(KEY_CRAWLER_STATUS, CRAWLER_STATUS_OFF) == CRAWLER_STATUS_ON
+                && !AlarmUtil.isAlarmManagerRunning(this)) {
+            // Preference에는 돌아간다는 flag가 저정됐지만 실제 돌아가고 있지 않을 때에 실행해 준다.
+            startCrawler();
+        }
     }
 
     /**
@@ -80,11 +83,24 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
+        inflater.inflate(R.menu.menu_main, menu);
 
         if (BuildConfig.DEBUG) {
-            menu.add(0, R.id.delete_all_from_table, 0, R.string.delete_all_from_table);
+            menu.add(0, R.id.check_alarm_manager, 2, R.string.check_crawler);
+            menu.add(0, R.id.delete_all_from_table, 3, R.string.delete_all_from_table);
         }
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        boolean isRunning = AlarmUtil.isAlarmManagerRunning(this);
+        MenuItem startItem = menu.findItem(R.id.start_crawler);
+        MenuItem stopItem = menu.findItem(R.id.stop_crawler);
+        startItem.setVisible(!isRunning);
+        stopItem.setVisible(isRunning);
+
         return true;
     }
 
@@ -92,32 +108,49 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
+            case R.id.go_setting:
+                Intent intent = new Intent(this, SettingActivity.class);
+                startActivity(intent);
+                return true;
+
             case R.id.start_crawler:
                 startCrawler();
+                Toast.makeText(this, R.string.toast_alarm_start, Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.stop_crawler:
+                stopCrawler();
+                Toast.makeText(this, R.string.toast_alarm_stop, Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.check_alarm_manager:
+                checkCrawler();
                 return true;
 
             case R.id.delete_all_from_table:
                 mMainViewModel.deleteAllFromTable();
                 PreferenceUtil.getInstance(this).putInt(Constants.KEY_INITIALIZE_PAGE, -1);
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     private void startCrawler() {
-        Log.d(TAG, "startCrawler()");
-        Intent intent = new Intent(this, AlarmBroadcaseReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
-                intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmUtil.startCrawlerWithTime(this);
+        PreferenceUtil.getInstance(this).putInt(KEY_CRAWLER_STATUS, CRAWLER_STATUS_ON);
+    }
 
-        // AlarmManager 호출
-        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        if (manager != null) {
-            manager.cancel(pendingIntent);
-            manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 0,
-                    DateUtils.HOUR_IN_MILLIS * 3, pendingIntent);
-        }
+    private void stopCrawler() {
+        AlarmUtil.stopCrawler(this);
+        PreferenceUtil.getInstance(this).putInt(KEY_CRAWLER_STATUS, CRAWLER_STATUS_OFF);
+    }
+
+    private void checkCrawler() {
+        Toast.makeText(this, AlarmUtil.isAlarmManagerRunning(this) ?
+                        R.string.toast_alarm_running : R.string.toast_alarm_stopped,
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/go_web_page"
+        android:title="@string/go_web_page" >
+    </item>
+</menu>

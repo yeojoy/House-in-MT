@@ -17,8 +17,17 @@ public interface Constants {
 
     String PARSED_TIME_FORMATTER = "yyyyMMDD_HHmmss";
 
+    int TIMER_DEFAULT_HOUR = 3;
+    int TIMER_MIN_HOUR = 2;
+    int TIMER_MAX_HOUR = 12;
+
+    int CRAWLER_STATUS_ON = 1;
+    int CRAWLER_STATUS_OFF = -1;
+
     /* SharedPreferences Key */
     String KEY_INITIALIZE_PAGE = "key_first_run__";
+    String KEY_TIMER_DURATION = "timer_duration__";
+    String KEY_CRAWLER_STATUS = "crawler_switch__";
 
     /* JSoup select */
     String SELECT_THUMBNAILS = "tbody > tr > td.kboard-list-thumbnail > a";
@@ -37,4 +46,7 @@ public interface Constants {
     String NODE_NEW_LINE = "<br>";
 
     String TEXT_UID = "uid=";
+
+    /* Intent Key */
+    String KEY_INTENT_URL = "detail_url";
 }

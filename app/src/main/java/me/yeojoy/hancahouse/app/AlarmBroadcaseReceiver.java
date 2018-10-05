@@ -58,14 +58,6 @@ public class AlarmBroadcaseReceiver extends BroadcastReceiver {
     private void saveHousesToDatabase(Context context, List<House> houses) {
         Log.d(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>> saveHousesToDatabase() <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 
-//        Handler handler = new Handler(context.getMainLooper());
-//        handler.post(() -> {
-//        });
-
-//        HancaDatabase db = HancaDatabase.getDatabase(context);
-//        HouseDao houseDao = db.houseDao();
-//        List<House> allHouses = houseDao.getAllRawRents();
-
         HancaDatabase hancaDatabase = HancaDatabase.getDatabase(context);
         HouseDao houseDao = hancaDatabase.houseDao();
         List<House> mAllHouses = houseDao.getAllRawRents();
@@ -113,7 +105,7 @@ public class AlarmBroadcaseReceiver extends BroadcastReceiver {
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_home_default);
-        String contentText = context.getString(R.string.notification_content, count);
+        String contentText = context.getString(R.string.notification_content_formatter, count);
         if (BuildConfig.DEBUG) {
             Date date = new Date();
 

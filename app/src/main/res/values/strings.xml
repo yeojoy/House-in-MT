@@ -4,9 +4,35 @@
     <string name="warn_cannot_call">전화를 할 수 없는 폰입니다.</string>
 
     <string name="notification_title">한카 렌트</string>
-    <string name="notification_content" formatted="false">%d개의 집이 새롭게 올라왔습니다.</string>
+    <string name="notification_content_formatter" formatted="false">%d개의 집이 새롭게 올라왔습니다.</string>
+
+    <!-- Setting -->
+    <string name="title_setting">설정</string>
+    <string name="title_crawler_switch">자동으로 집 정보 가져오기</string>
+    <string name="description_crawler_switch">당신이 설정한 시간단위로 집 정보를 자동으로 불러와 스마트폰 저장소에 저장합니다.</string>
+
+    <string name="title_timer_duration">시간 간격</string>
+    <string name="description_timer_duration">시간은 기본 3시간 단위로 정보를 가져옵니다. 최소 2시간에서 최대 12시간까지 시간간격을 설정할 수 있습니다.</string>
+
+    <string name="time_duration_formatter" formatted="false">%d 시간</string>
+
+    <string name="dialog_hour_picker_title">시간을 선택하세요.</string>
+    <string name="dialog_hour_picker_ok">확인</string>
+    <string name="dialog_hour_picker_cancel">취소</string>
+
+    <!-- Alarm -->
+    <string name="toast_alarm_running">알람이 실행 중입니다.</string>
+    <string name="toast_alarm_stopped">알람이 종료 됐습니다.</string>
+    <string name="toast_alarm_start">\"자동으로 가져오기\"를 시작합니다.</string>
+    <string name="toast_alarm_stop">\"자동으로 가져오기\"를 종료합니다.</string>
+    <string name="toast_alarm_restart_formatter" formatted="false">%d 시간 간격으로 \"자동으로 가져오기\"를 재실행 합니다.</string>
 
     <!-- menu title -->
-    <string name="start_crawler">시작</string>
+    <string name="go_setting">설정</string>
+    <string name="start_crawler">\"자동으로 가져오기\" 시작</string>
+    <string name="stop_crawler">\"자동으로 가져오기\" 끝내기</string>
+    <string name="check_crawler">알람 확인</string>
     <string name="delete_all_from_table">모두 삭제</string>
+
+    <string name="go_web_page">웹으로 보기</string>
 </resources>
