@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import me.yeojoy.hancahouse.app.Constants;
 import me.yeojoy.hancahouse.util.AlarmUtil;
-import me.yeojoy.hancahouse.util.PreferenceUtil;
+import me.yeojoy.hancahouse.util.PreferenceHelper;
 
 public class SettingActivity extends AppCompatActivity implements Constants {
     private static final String TAG = SettingActivity.class.getSimpleName();
@@ -39,27 +39,26 @@ public class SettingActivity extends AppCompatActivity implements Constants {
 
         final Group visibilityGroup = findViewById(R.id.group_visibility);
 
-        boolean isCrawlerRunning = PreferenceUtil.getInstance(this)
-                .getInt(KEY_CRAWLER_STATUS, CRAWLER_STATUS_OFF) == CRAWLER_STATUS_ON;
+        boolean isCrawlerStatusOn = PreferenceHelper.isCrawlerStatusOn(this);
 
-        visibilityGroup.setVisibility(isCrawlerRunning ? View.VISIBLE : View.GONE);
-        crawlerSwitch.setChecked(isCrawlerRunning);
+        visibilityGroup.setVisibility(isCrawlerStatusOn ? View.VISIBLE : View.GONE);
+        crawlerSwitch.setChecked(isCrawlerStatusOn);
 
         textViewCrawlerTitle.setOnClickListener(view -> crawlerSwitch.performClick());
         textViewCrawlerDescription.setOnClickListener(view -> crawlerSwitch.performClick());
         crawlerSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             visibilityGroup.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-            PreferenceUtil.getInstance(this).putInt(KEY_CRAWLER_STATUS,
-                    isChecked ? CRAWLER_STATUS_ON : CRAWLER_STATUS_OFF);
             if (isChecked) {
                 startCrawler();
+                PreferenceHelper.setCrawlerStatusOn(this);
             } else {
                 stopCralwer();
+                PreferenceHelper.setCrawlerStatusOff(this);
             }
         });
 
         mTextViewTime = findViewById(R.id.text_view_time);
-        mTextViewTime.setText(getString(R.string.time_duration_formatter, PreferenceUtil.getInstance(this).getInt(KEY_TIMER_DURATION, TIMER_DEFAULT_HOUR)));
+        mTextViewTime.setText(getString(R.string.time_duration_formatter, PreferenceHelper.getCrawlerDurationTime(this)));
         mTextViewTime.setOnClickListener(view -> showHourPickerDialog());
     }
 
@@ -84,7 +83,7 @@ public class SettingActivity extends AppCompatActivity implements Constants {
 
     private void restartCrawlerWithTime(int hour) {
 
-        PreferenceUtil.getInstance(this).putInt(KEY_TIMER_DURATION, hour);
+        PreferenceHelper.setCrawlerDurationTime(this, hour);
 
         AlarmUtil.stopCrawler(this);
         AlarmUtil.startCrawlerWithTime(this);
@@ -99,7 +98,7 @@ public class SettingActivity extends AppCompatActivity implements Constants {
         final NumberPicker numberPicker = new NumberPicker(this);
         numberPicker.setMinValue(TIMER_MIN_HOUR);
         numberPicker.setMaxValue(TIMER_MAX_HOUR);
-        numberPicker.setValue(PreferenceUtil.getInstance(this).getInt(KEY_TIMER_DURATION, TIMER_DEFAULT_HOUR));
+        numberPicker.setValue(PreferenceHelper.getCrawlerDurationTime(this));
 
         numberPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
             Log.d(TAG, "New Value >>>>> " + newVal);

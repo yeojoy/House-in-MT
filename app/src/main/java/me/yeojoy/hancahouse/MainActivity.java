@@ -19,7 +19,7 @@ import me.yeojoy.hancahouse.app.Constants;
 import me.yeojoy.hancahouse.app.adapter.HouseAdapter;
 import me.yeojoy.hancahouse.model.House;
 import me.yeojoy.hancahouse.util.AlarmUtil;
-import me.yeojoy.hancahouse.util.PreferenceUtil;
+import me.yeojoy.hancahouse.util.PreferenceHelper;
 import me.yeojoy.hancahouse.view.MainView;
 import me.yeojoy.hancahouse.viewmodel.MainViewModel;
 
@@ -47,19 +47,13 @@ public class MainActivity extends AppCompatActivity implements MainView, Constan
         mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
         mMainViewModel.getRents().observe(this, houses -> {
-            Log.d(TAG, "=================================================================");
-            for (House house : houses) {
-                Log.d(TAG, house.toString());
-            }
-
             ((HouseAdapter) recyclerView.getAdapter()).setHouses(houses);
-            Log.d(TAG, "=================================================================");
         });
 
         loadHouses();
 
-        if (PreferenceUtil.getInstance(this).getInt(KEY_CRAWLER_STATUS, CRAWLER_STATUS_OFF) == CRAWLER_STATUS_ON
-                && !AlarmUtil.isAlarmManagerRunning(this)) {
+        if (PreferenceHelper.isCrawlerStatusOn(this) &&
+                !AlarmUtil.isAlarmManagerRunning(this)) {
             // Preference에는 돌아간다는 flag가 저정됐지만 실제 돌아가고 있지 않을 때에 실행해 준다.
             startCrawler();
         }
@@ -72,16 +66,17 @@ public class MainActivity extends AppCompatActivity implements MainView, Constan
         Log.d(TAG, "loadHouses()");
         mMainViewModel.loadHouses(1);
 
-        if (PreferenceUtil.getInstance(this).getInt(Constants.KEY_INITIALIZE_PAGE, -1) != 1) {
+        if (PreferenceHelper.isFirstLaunch(this)) {
             mMainViewModel.loadHouses(2);
             mMainViewModel.loadHouses(3);
 
-            PreferenceUtil.getInstance(this).putInt(Constants.KEY_INITIALIZE_PAGE, 1);
+            PreferenceHelper.setFirstLaunchFlag(this, true);
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "onCreateOptionsMenu()");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
 
@@ -94,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements MainView, Constan
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
+        Log.d(TAG, "onPrepareOptionsMenu()");
         boolean isRunning = AlarmUtil.isAlarmManagerRunning(this);
         MenuItem startItem = menu.findItem(R.id.start_crawler);
         MenuItem stopItem = menu.findItem(R.id.stop_crawler);
@@ -106,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements MainView, Constan
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected()");
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.go_setting:
@@ -129,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements MainView, Constan
 
             case R.id.delete_all_from_table:
                 mMainViewModel.deleteAllFromTable();
-                PreferenceUtil.getInstance(this).putInt(Constants.KEY_INITIALIZE_PAGE, -1);
+                PreferenceHelper.setFirstLaunchFlag(this, false);
                 return true;
 
             default:
@@ -139,12 +135,12 @@ public class MainActivity extends AppCompatActivity implements MainView, Constan
 
     private void startCrawler() {
         AlarmUtil.startCrawlerWithTime(this);
-        PreferenceUtil.getInstance(this).putInt(KEY_CRAWLER_STATUS, CRAWLER_STATUS_ON);
+        PreferenceHelper.setCrawlerStatusOn(this);
     }
 
     private void stopCrawler() {
         AlarmUtil.stopCrawler(this);
-        PreferenceUtil.getInstance(this).putInt(KEY_CRAWLER_STATUS, CRAWLER_STATUS_OFF);
+        PreferenceHelper.setCrawlerStatusOff(this);
     }
 
     private void checkCrawler() {

@@ -19,7 +19,7 @@ public class AlarmUtil implements Constants {
 
         PendingIntent pendingIntent = getBroadcastPendingIntent(context);
 
-        final int TIME = PreferenceUtil.getInstance(context).getInt(KEY_TIMER_DURATION, TIMER_DEFAULT_HOUR);
+        final int TIME = PreferenceHelper.getCrawlerDurationTime(context);
         Log.d(TAG, "TIME : " + TIME);
 
         long duration = TIME * (BuildConfig.DEBUG ? DateUtils.MINUTE_IN_MILLIS : DateUtils.HOUR_IN_MILLIS);
