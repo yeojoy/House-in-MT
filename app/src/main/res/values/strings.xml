@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">HancaHouse</string>
+    <!-- resolve this "app_name" value in build.gradle -->
+    <!--<string name="app_name">HancaHouse</string>-->
 
     <string name="warn_cannot_call">전화를 할 수 없는 폰입니다.</string>
 
