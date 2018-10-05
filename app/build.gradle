@@ -32,8 +32,7 @@ android {
 
     android.applicationVariants.all { variant ->
         variant.outputs.all {
-//            outputFileName = "HancaHouse-${variant.buildType.name}-${variant.versionCode}-${variant.versionName}.apk"
-            outputFileName = "app-debug.apk"
+            outputFileName = "HancaHouse-${variant.buildType.name}-${variant.versionCode}-${variant.versionName}.apk"
         }
     }
 }
@@ -64,21 +63,20 @@ dependencies {
 }
 
 task upload(type: Exec) {
-    println("Upload file.")
     def API_URL = "https://content.dropboxapi.com/2/files/upload"
     def fileName = "HancaHouse-debug-${rootProject.houseVersionCode}-${rootProject.houseVersionName}.apk"
 //    def fileName = "app-debug.apk"
     def destFilePath = "/hanca/${rootProject.houseVersionCode}/${fileName}"
     def sourceFilePath = "@app/build/outputs/apk/debug/${fileName}"
 
+    def HEADER_AUTHORIZATION = "Authorization: Bearer ${DROPBOX_AUTORIONZATION}"
+    def HEADER_ARGS = "Dropbox-API-Arg: {\"path\": \"${destFilePath}\", \"mode\": \"add\",\"autorename\": true,\"mute\": false,\"strict_conflict\": false}"
+    def HEADER_CONTENT_TYPE = "Content-Type: application/octet-stream"
+
     println(API_URL)
     println(fileName)
     println(destFilePath)
     println(sourceFilePath)
-
-    def HEADER_AUTHORIZATION = "Authorization: Bearer TnLEoXKIB1cAAAAAAACBsjoBHKmH4x5u0UNpIiGwd0yZ2YnyTSCZSAkUje65YNt-"
-    def HEADER_ARGS = "Dropbox-API-Arg: {\"path\": \"${destFilePath}\", \"mode\": \"add\",\"autorename\": true,\"mute\": false,\"strict_conflict\": false}"
-    def HEADER_CONTENT_TYPE = "Content-Type: application/octet-stream"
     println(HEADER_AUTHORIZATION)
     println(HEADER_ARGS)
     println(HEADER_CONTENT_TYPE)
