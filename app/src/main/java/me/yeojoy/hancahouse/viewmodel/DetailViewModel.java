@@ -18,8 +18,8 @@ public class DetailViewModel extends ViewModel {
         return mHouseDetailLiveData;
     }
 
-    public void loadPage(HouseDetail houseDetail) {
-        HouseDetailNetworkRepository.getInstance().loadPage(houseDetail,
-                houseDetail1 -> mHouseDetailLiveData.postValue(houseDetail));
+    public void loadPage(HouseDetail detail) {
+        HouseDetailNetworkRepository.getInstance().loadPage(detail,
+                houseDetail -> mHouseDetailLiveData.postValue(houseDetail));
     }
 }

@@ -72,6 +72,8 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
         mDetailViewModel.getHouseDetailLiveData().setValue(houseDetail);
         mDetailViewModel.getHouseDetailLiveData().observe(this, this::bindDataToView);
 
+        mDetailViewModel.loadPage(houseDetail);
+
         ImageView imageViewThumbnail = findViewById(R.id.image_view_thumbnail);
 
         TextView textViewTitle = findViewById(R.id.text_view_title);
@@ -123,6 +125,11 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
     }
 
     private void bindDataToView(HouseDetail houseDetail) {
+
+        if (houseDetail == null) {
+            return;
+        }
+
         if (TextUtils.isEmpty(houseDetail.getContents())) {
             return;
         }
@@ -157,7 +164,7 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
     @Override
     protected void onResume() {
         super.onResume();
-        mDetailViewModel.loadPage(mDetailViewModel.getHouseDetailLiveData().getValue());
+        bindDataToView(mDetailViewModel.getHouseDetailLiveData().getValue());
     }
 
     private SpannableStringBuilder getDetailDescription(String contents) {
