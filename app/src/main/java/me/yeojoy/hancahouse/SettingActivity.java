@@ -60,6 +60,9 @@ public class SettingActivity extends AppCompatActivity implements Constants {
         mTextViewTime = findViewById(R.id.text_view_time);
         mTextViewTime.setText(getString(R.string.time_duration_formatter, PreferenceHelper.getCrawlerDurationTime(this)));
         mTextViewTime.setOnClickListener(view -> showHourPickerDialog());
+
+        findViewById(R.id.text_view_timer_title).setOnClickListener(view -> mTextViewTime.performClick());
+        findViewById(R.id.text_view_timer_description).setOnClickListener(view -> mTextViewTime.performClick());
     }
 
     @Override

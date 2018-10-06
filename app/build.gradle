@@ -30,11 +30,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
     }
 
-    android.applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "HancaHouse-${variant.buildType.name}-${variant.versionCode}-${variant.versionName}.apk"
-        }
-    }
+//    android.applicationVariants.all { variant ->
+//        variant.outputs.all {
+//            outputFileName = "HancaHouse-${variant.buildType.name}-${variant.versionCode}-${variant.versionName}.apk"
+//        }
+//    }
 }
 
 dependencies {
