@@ -28,7 +28,7 @@ task clean(type: Delete) {
 
 ext {
 
-    houseVersionCode = System.getenv("BUILD_NUMBER") as Integer ?: 5
+    houseVersionCode = System.getenv("BUILD_NUMBER") as Integer ?: 7
     houseVersionName = "1.0.0"
 
     roomVersion = '1.1.1'

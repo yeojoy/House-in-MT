@@ -10,6 +10,7 @@ import android.util.Log;
 import java.util.Iterator;
 import java.util.List;
 
+import me.yeojoy.hancahouse.BuildConfig;
 import me.yeojoy.hancahouse.model.House;
 import me.yeojoy.hancahouse.repository.HouseDBRepository;
 import me.yeojoy.hancahouse.repository.HouseNetworkRepository;
@@ -25,6 +26,14 @@ public class MainViewModel extends AndroidViewModel {
         super(application);
         mHouseDBRepository = new HouseDBRepository(application);
         mRents = mHouseDBRepository.getAllRents();
+
+        if (BuildConfig.DEBUG && mRents.getValue() != null) {
+            Log.d(TAG, "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+            for (House house : mRents.getValue()) {
+                Log.w(TAG, house.toString());
+            }
+            Log.d(TAG, "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+        }
     }
 
     public void loadHouses(@Nullable Integer pageNumber) {

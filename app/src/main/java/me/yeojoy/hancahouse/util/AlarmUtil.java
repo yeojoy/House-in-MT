@@ -46,6 +46,7 @@ public class AlarmUtil implements Constants {
     public static boolean isAlarmManagerRunning(Context context) {
         Log.i(TAG, "isAlarmManagerRunning()");
         Intent intent = new Intent(context, AlarmBroadcaseReceiver.class);
+        intent.setAction(ACTION_START_CRAWLER);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
                 intent, PendingIntent.FLAG_NO_CREATE);
 
@@ -54,6 +55,7 @@ public class AlarmUtil implements Constants {
 
     private static PendingIntent getBroadcastPendingIntent(Context context) {
         Intent intent = new Intent(context, AlarmBroadcaseReceiver.class);
+        intent.setAction(ACTION_START_CRAWLER);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
                 intent, PendingIntent.FLAG_CANCEL_CURRENT);
 

@@ -36,4 +36,7 @@
     <string name="delete_all_from_table">모두 삭제</string>
 
     <string name="go_web_page">웹으로 보기</string>
+
+    <!-- House Detail -->
+    <string name="toast_no_detail_url">웹으로 보기를 실행할 수 없습니다. 종료 후 다시 실행해 주세요.</string>
 </resources>

@@ -34,15 +34,16 @@ public class HouseDetailNetworkRepository implements Constants {
         return sInstance;
     }
 
-    private HouseDetailNetworkRepository() {}
+    private HouseDetailNetworkRepository() {
+    }
 
-    public void loadPage(HouseDetail houseDetail, OnLoadDetailPageListener listener) {
-        Log.d(TAG, "housedetail > " + houseDetail.toString());
+    public void loadPage(final int houseId, final String title,
+                         final String detailUrl, OnLoadDetailPageListener listener) {
         Runnable network = () -> {
 
             Connection.Response response = null;
             try {
-                String url = URLDecoder.decode(houseDetail.getUrl(), "UTF-8");
+                String url = URLDecoder.decode(detailUrl, "UTF-8");
 
                 if (!url.startsWith("https://")) {
                     url = HOST + url;
@@ -104,8 +105,13 @@ public class HouseDetailNetworkRepository implements Constants {
                 imageUrls.add(e.attr(ATTR_SOURCE));
             }
 
-            Log.d(TAG, "content > " + contentStringBuilder.toString());
-            houseDetail.setContents(contentStringBuilder.toString());
+            String pattern = "\n{3,}";
+            String contentString = contentStringBuilder.toString().replaceAll(pattern, "\n");
+            Log.d(TAG, "content > " + contentString);
+
+            HouseDetail houseDetail = new HouseDetail(title, contentString, null, detailUrl, houseId);
+
+            Log.w(TAG, houseDetail.toString());
 
             if (imageUrls.size() > 0) {
                 houseDetail.setImageUrls(imageUrls);
