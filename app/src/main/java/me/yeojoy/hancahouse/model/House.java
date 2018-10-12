@@ -12,43 +12,43 @@ import java.util.Objects;
 import me.yeojoy.hancahouse.db.DBConstants;
 
 @Entity(tableName = DBConstants.TABLE_NAME)
-public class House implements Parcelable {
+public class House implements Parcelable, DBConstants {
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = COLUMN_ID)
     private int mId;
 
     @NonNull
-    @ColumnInfo(name = "title")
+    @ColumnInfo(name = COLUMN_TITLE)
     private String mTitle;
 
     @NonNull
-    @ColumnInfo(name = "thumbnail_url")
+    @ColumnInfo(name = COLUMN_THUMBNAIL_URL)
     private String mThumbnailUrl;
 
     /**
      * detail of house information webpage url
      */
     @NonNull
-    @ColumnInfo(name = "url")
+    @ColumnInfo(name = COLUMN_DETAIL_URL)
     private String mUrl;
 
-    @ColumnInfo(name = "author")
+    @ColumnInfo(name = COLUMN_AUTHOR)
     private String mAuthor;
 
-    @ColumnInfo(name = "date")
+    @ColumnInfo(name = COLUMN_DATE)
     private long mDate;
 
-    @ColumnInfo(name = "parsed_time")
+    @ColumnInfo(name = COLUMN_PARSED_TIME)
     private String mParsedTime;
 
     /**
      * unique id in board
      */
-    @ColumnInfo(name = "uid")
+    @ColumnInfo(name = COLUMN_UID)
     private long mUid;
 
-    @ColumnInfo(name = "board_type")
+    @ColumnInfo(name = COLUMN_BOARD_TYPE)
     private int mBoardType;
 
     public House(@NonNull String title, @NonNull String thumbnailUrl, @NonNull String url,

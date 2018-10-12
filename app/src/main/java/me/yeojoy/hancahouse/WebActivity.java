@@ -21,7 +21,6 @@ public class WebActivity extends AppCompatActivity implements Constants {
 
     private static final String TAG = WebActivity.class.getSimpleName();
 
-    private WebView mWebView;
     private ProgressBar mProgressBar;
 
     @Override
@@ -36,12 +35,14 @@ public class WebActivity extends AppCompatActivity implements Constants {
         Intent intent = getIntent();
         if (intent == null) {
             finish();
+            return;
         }
 
         String url = intent.getStringExtra(KEY_INTENT_URL);
 
         if (TextUtils.isEmpty(url)) {
             finish();
+            return;
         }
 
         if (!url.startsWith("https://")) {
@@ -50,11 +51,11 @@ public class WebActivity extends AppCompatActivity implements Constants {
 
         Log.d(TAG, "Url >>> " + url);
 
-        mWebView = findViewById(R.id.webview);
-        settingWebview(mWebView);
+        WebView webView = findViewById(R.id.webview);
+        settingWebview(webView);
         mProgressBar = findViewById(R.id.progress_bar_loading);
 
-        mWebView.loadUrl(url);
+        webView.loadUrl(url);
     }
 
     @Override

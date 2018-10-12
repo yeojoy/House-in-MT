@@ -104,7 +104,7 @@ public class AlarmBroadcaseReceiver extends BroadcastReceiver {
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_home_default);
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_home_white_40dp);
         String contentText = context.getString(R.string.notification_content_formatter, count);
         if (BuildConfig.DEBUG) {
             Date date = new Date();
@@ -115,7 +115,7 @@ public class AlarmBroadcaseReceiver extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // add Notification CHANNEL ID
             Notification.Builder newMessageNotificationBuilder = new Notification.Builder(context, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_home_default)
+                    .setSmallIcon(R.drawable.ic_home_white_40dp)
                     .setContentTitle(context.getText(R.string.notification_title))
                     .setContentText(contentText)
                     .setContentIntent(resultPendingIntent)
@@ -125,7 +125,7 @@ public class AlarmBroadcaseReceiver extends BroadcastReceiver {
             showNotificationMoreThanOreo(context, newMessageNotificationBuilder);
         } else {
             NotificationCompat.Builder newMessageNotificationBuilder = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.ic_home_default)
+                    .setSmallIcon(R.drawable.ic_home_white_40dp)
                     .setContentTitle(context.getText(R.string.notification_title))
                     .setContentText(contentText)
                     .setContentIntent(resultPendingIntent)

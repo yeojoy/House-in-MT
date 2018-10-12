@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:background="?attr/selectableItemBackground"
-    tools:ignore="RtlHardcoded">
+    tools:ignore="RtlHardcoded, SpUsage">
 
     <ImageView
         android:id="@+id/image_view_thumbnail"
@@ -18,7 +18,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_launcher_foreground" />
+        tools:src="@drawable/ic_home_black_24dp" />
 
     <TextView
         android:id="@+id/text_view_title"

@@ -49,4 +49,7 @@ public interface Constants {
 
     /* Intent Key */
     String KEY_INTENT_URL = "detail_url";
+
+    /* Intent Filter */
+    String ACTION_START_CRAWLER = "me.yeojoy.hancahouse.START_CRAWLER";
 }

@@ -55,11 +55,13 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        if (intent == null) finish();
+        if (intent == null) {
+            finish();
+            return;
+        }
 
         House house = getIntent().getParcelableExtra(House.class.getSimpleName());
-
-        if (house == null) finish();
+        Log.d(TAG, "DETAIL ACTIVITY >>> " + house.toString());
 
         AppBarLayout appBarLayout = findViewById(R.id.appbar);
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
@@ -67,12 +69,18 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
         appBarLayout.setLayoutParams(params);
 
         mDetailViewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
+        mDetailViewModel.loadPage(house.getId(), house.getTitle(), house.getUrl());
 
-        HouseDetail houseDetail = new HouseDetail(house.getTitle(), house.getUrl());
-        mDetailViewModel.getHouseDetailLiveData().setValue(houseDetail);
-        mDetailViewModel.getHouseDetailLiveData().observe(this, this::bindDataToView);
+        mDetailViewModel.getHouseDetailLiveData(house.getId())
+                .observe(this, this::bindDataToView);
 
-        mDetailViewModel.loadPage(houseDetail);
+        mDetailViewModel.getAllHouseDetails().observe(this, allHouseDetails -> {
+            Log.e(TAG, "########################################################################");
+            for (HouseDetail houseDetail : allHouseDetails) {
+                Log.e(TAG, houseDetail.toString());
+            }
+            Log.e(TAG, "########################################################################");
+        });
 
         ImageView imageViewThumbnail = findViewById(R.id.image_view_thumbnail);
 
@@ -104,33 +112,50 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_detail, menu);
+        if (BuildConfig.DEBUG) {
+            menu.add(0, R.id.delete_all_from_table, 2, R.string.delete_all_from_table);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        } else if (item.getItemId() == R.id.go_web_page) {
-            String url = mDetailViewModel.getHouseDetailLiveData().getValue().getUrl();
-            Log.d(TAG, "url : " + url);
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                finish();
+                return true;
+            }
+            case R.id.go_web_page: {
+                String url = mDetailViewModel.getHouseDetailLiveData().getValue().getUrl();
+                Log.d(TAG, "url : " + url);
 
-            Intent intent = new Intent(this, WebActivity.class);
-            intent.putExtra(KEY_INTENT_URL, url);
-            startActivity(intent);
-            return true;
+                if (TextUtils.isEmpty(url)) {
+                    Toast.makeText(this, R.string.toast_no_detail_url, Toast.LENGTH_SHORT)
+                            .show();
+                    return false;
+                }
+
+                Intent intent = new Intent(this, WebActivity.class);
+                intent.putExtra(KEY_INTENT_URL, url);
+                startActivity(intent);
+                return true;
+            }
+            case R.id.delete_all_from_table: {
+                mDetailViewModel.deleteAllItems();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void bindDataToView(HouseDetail houseDetail) {
-
+        Log.i(TAG, "bindDataToView()");
         if (houseDetail == null) {
+            Log.e(TAG, "houseDetail is null.");
             return;
         }
 
         if (TextUtils.isEmpty(houseDetail.getContents())) {
+            Log.e(TAG, "houseDetail's contents is null.");
             return;
         }
 
