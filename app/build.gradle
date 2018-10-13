@@ -75,5 +75,6 @@ task upload(type: Exec) {
     def COMMANDS = ["curl", "-X", "POST", API_URL, "--header", HEADER_AUTHORIZATION,
             "--header", HEADER_ARGS, "--header", HEADER_CONTENT_TYPE, "--data-binary",
             sourceFilePath]
-    // def text = COMMANDS.execute().text
+    COMMANDS.execute()
+//     def text = COMMANDS.execute().text
 }
