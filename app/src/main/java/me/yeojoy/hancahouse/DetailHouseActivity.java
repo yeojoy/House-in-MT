@@ -104,7 +104,7 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
 
             Log.e(TAG, "########################################################################");
             for (HouseDetail houseDetail : allHouseDetails) {
-                Log.e(TAG, houseDetail.toString());
+                Log.e(TAG, houseDetail.getHouseId() + ", " + house.getTitle());
             }
             Log.e(TAG, "########################################################################");
         });

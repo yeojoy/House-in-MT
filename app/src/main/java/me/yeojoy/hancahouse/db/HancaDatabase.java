@@ -11,7 +11,7 @@ import android.support.annotation.NonNull;
 import me.yeojoy.hancahouse.model.House;
 import me.yeojoy.hancahouse.model.HouseDetail;
 
-@Database(entities = { House.class, HouseDetail.class }, version = 5, exportSchema = false)
+@Database(entities = { House.class, HouseDetail.class }, version = 6, exportSchema = false)
 public abstract class HancaDatabase extends RoomDatabase implements DBConstants {
 
     public abstract HouseDao houseDao();
@@ -19,21 +19,38 @@ public abstract class HancaDatabase extends RoomDatabase implements DBConstants 
 
     private static HancaDatabase sInstance;
 
-    private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+    public static HancaDatabase getDatabase(final Context context) {
+        if (sInstance == null) {
+            synchronized (HancaDatabase.class) {
+                if (sInstance == null) {
+                    sInstance = Room.databaseBuilder(context.getApplicationContext(),
+                            HancaDatabase.class, DATABASE_NAME)
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4,
+                                    MIGRATION_4_5, MIGRATION_5_6)
+                            .build();
+                }
+            }
+        }
+
+        return sInstance;
+    }
+
+    private static final Migration MIGRATION_5_6 = new Migration(5, 6) {
         @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE " + TABLE_NAME
-                    + " ADD COLUMN " + COLUMN_AUTHOR + " TEXT");
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE INDEX index_house_details_house_id ON "
+                    + DBConstants.TABLE_NAME_DETAIL + "(house_id)");
         }
     };
 
-    private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+    private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE " + TABLE_NAME
-                    + " ADD COLUMN " + COLUMN_BOARD_TYPE + " INTEGER DEFAULT 1 NOT NULL");
-            database.execSQL("ALTER TABLE " + TABLE_NAME
-                    + " ADD COLUMN " + COLUMN_PARSED_TIME + " TEXT");
+            database.execSQL("DELETE FROM " + TABLE_NAME_DETAIL);
+            database.execSQL("ALTER TABLE " + TABLE_NAME_DETAIL
+                    + " ADD COLUMN " + COLUMN_DETAIL_URL + " TEXT"
+            );
+            // UPDATE tablename SET filedA='456', fieldB='ABC' WHERE test='123' LIMIT 10;
         }
     };
 
@@ -56,30 +73,22 @@ public abstract class HancaDatabase extends RoomDatabase implements DBConstants 
         }
     };
 
-    private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+    private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("DELETE FROM " + TABLE_NAME_DETAIL);
-            database.execSQL("ALTER TABLE " + TABLE_NAME_DETAIL
-                    + " ADD COLUMN " + COLUMN_DETAIL_URL + " TEXT"
-            );
-            // UPDATE tablename SET filedA='456', fieldB='ABC' WHERE test='123' LIMIT 10;
+            database.execSQL("ALTER TABLE " + TABLE_NAME
+                    + " ADD COLUMN " + COLUMN_BOARD_TYPE + " INTEGER DEFAULT 1 NOT NULL");
+            database.execSQL("ALTER TABLE " + TABLE_NAME
+                    + " ADD COLUMN " + COLUMN_PARSED_TIME + " TEXT");
         }
     };
 
-    public static HancaDatabase getDatabase(final Context context) {
-        if (sInstance == null) {
-            synchronized (HancaDatabase.class) {
-                if (sInstance == null) {
-                    sInstance = Room.databaseBuilder(context.getApplicationContext(),
-                            HancaDatabase.class, DATABASE_NAME)
-                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4,
-                                    MIGRATION_4_5)
-                            .build();
-                }
-            }
+    private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE " + TABLE_NAME
+                    + " ADD COLUMN " + COLUMN_AUTHOR + " TEXT");
         }
+    };
 
-        return sInstance;
-    }
 }

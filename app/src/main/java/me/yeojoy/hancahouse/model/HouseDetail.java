@@ -20,7 +20,7 @@ import java.util.Objects;
 import me.yeojoy.hancahouse.db.DBConstants;
 
 @Entity(tableName = DBConstants.TABLE_NAME_DETAIL,
-        indices = @Index(value = DBConstants.COLUMN_HOUSE_ID, unique = true),
+        indices = @Index(DBConstants.COLUMN_HOUSE_ID),
         foreignKeys = @ForeignKey(entity = House.class,
                 parentColumns = DBConstants.COLUMN_ID,
                 childColumns = DBConstants.COLUMN_HOUSE_ID))
