@@ -65,7 +65,6 @@ dependencies {
 task upload(type: Exec) {
     def API_URL = "https://content.dropboxapi.com/2/files/upload"
     def fileName = "HancaHouse-debug-${rootProject.houseVersionCode}-${rootProject.houseVersionName}.apk"
-//    def fileName = "app-debug.apk"
     def destFilePath = "/hanca/${rootProject.houseVersionCode}/${fileName}"
     def sourceFilePath = "@app/build/outputs/apk/debug/${fileName}"
 
@@ -73,27 +72,8 @@ task upload(type: Exec) {
     def HEADER_ARGS = "Dropbox-API-Arg: {\"path\": \"${destFilePath}\", \"mode\": \"overwrite\",\"autorename\": true,\"mute\": false,\"strict_conflict\": false}"
     def HEADER_CONTENT_TYPE = "Content-Type: application/octet-stream"
 
-    println(API_URL)
-    println(fileName)
-    println(destFilePath)
-    println(sourceFilePath)
-    println(HEADER_AUTHORIZATION)
-    println(HEADER_ARGS)
-    println(HEADER_CONTENT_TYPE)
-
-    executable "/bin/sh"
-//
-//    args "-c", "curl -X POST ${API_URL} " +
-//            "--header \"${HEADER_AUTHORIZATION}\" " +
-//            "--header \"${HEADER_ARGS}\" " +
-//            "--header \"${HEADER_CONTENT_TYPE}\" " +
-//            "--data-binary ${sourceFilePath}"
-
     def COMMANDS = ["curl", "-X", "POST", API_URL, "--header", HEADER_AUTHORIZATION,
             "--header", HEADER_ARGS, "--header", HEADER_CONTENT_TYPE, "--data-binary",
             sourceFilePath]
     def text = COMMANDS.execute().text
-    println("----------------------------------------------------------------------------------------");
-    println(text)
-    println("----------------------------------------------------------------------------------------");
 }
