@@ -71,17 +71,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Lasalle 라쌀 큰 방 3개 2층 집 렌트합니다. $1,000 10월 1일 입주." />
 
-            <ProgressBar
-                android:id="@+id/progress_bar_loading"
-                style="@android:style/Widget.Material.ProgressBar.Large"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_view_title" />
-
             <TextView
                 android:id="@+id/text_view_description"
                 android:layout_width="0dp"
@@ -93,8 +82,18 @@
                 android:textSize="16dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/progress_bar_loading"
+                app:layout_constraintTop_toBottomOf="@id/text_view_title"
                 tools:text="Lasalle 라쌀 큰 방 3개 2층 집 렌트합니다. $1,000 10월 1일 입주. LASSALLE 라살 지역 RUE SIMONNE 길 듀플렉스 랜트 구합니다." />
+
+            <ProgressBar
+                android:id="@+id/progress_bar_loading"
+                style="@android:style/Widget.Material.ProgressBar.Large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_title" />
 
             <LinearLayout
                 android:id="@+id/linear_layout_images"

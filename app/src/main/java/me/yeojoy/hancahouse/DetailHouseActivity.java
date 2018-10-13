@@ -68,20 +68,6 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
         params.height = getResources().getDisplayMetrics().widthPixels;
         appBarLayout.setLayoutParams(params);
 
-        mDetailViewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
-        mDetailViewModel.loadPage(house.getId(), house.getTitle(), house.getUrl());
-
-        mDetailViewModel.getHouseDetailLiveData(house.getId())
-                .observe(this, this::bindDataToView);
-
-        mDetailViewModel.getAllHouseDetails().observe(this, allHouseDetails -> {
-            Log.e(TAG, "########################################################################");
-            for (HouseDetail houseDetail : allHouseDetails) {
-                Log.e(TAG, houseDetail.toString());
-            }
-            Log.e(TAG, "########################################################################");
-        });
-
         ImageView imageViewThumbnail = findViewById(R.id.image_view_thumbnail);
 
         TextView textViewTitle = findViewById(R.id.text_view_title);
@@ -106,6 +92,30 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
 
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitle(house.getAuthor());
+
+        mDetailViewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
+        mDetailViewModel.loadPage(house.getId(), house.getTitle(), house.getUrl());
+
+        mDetailViewModel.getHouseDetailLiveData(house.getId())
+                .observe(this, this::bindDataToView);
+
+        mDetailViewModel.getAllHouseDetails().observe(this, allHouseDetails -> {
+            Log.e(TAG, "########################################################################");
+            for (HouseDetail houseDetail : allHouseDetails) {
+                Log.e(TAG, houseDetail.toString());
+            }
+            Log.e(TAG, "########################################################################");
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        HouseDetail houseDetail = mDetailViewModel.getHouseDetailLiveData().getValue();
+
+        if (houseDetail != null && !TextUtils.isEmpty(houseDetail.getContents())) {
+            mProgressBarLoading.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -184,12 +194,6 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
         params.bottomMargin = getResources().getDimensionPixelSize(R.dimen.margin_bottom_detail_image);
 
         return params;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        bindDataToView(mDetailViewModel.getHouseDetailLiveData().getValue());
     }
 
     private SpannableStringBuilder getDetailDescription(String contents) {
