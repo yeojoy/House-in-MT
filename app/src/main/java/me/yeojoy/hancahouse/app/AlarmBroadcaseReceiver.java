@@ -92,6 +92,7 @@ public class AlarmBroadcaseReceiver extends BroadcastReceiver {
 
     }
 
+    @SuppressWarnings("deprecation")
     private void notifyNewHouse(final Context context, final int count) {
         Log.d(TAG, "notifyNewHouse(), count : " + count);
         // Create an Intent for the activity you want to start

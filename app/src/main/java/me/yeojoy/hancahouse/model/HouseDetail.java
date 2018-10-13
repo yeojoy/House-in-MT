@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import java.util.Objects;
 import me.yeojoy.hancahouse.db.DBConstants;
 
 @Entity(tableName = DBConstants.TABLE_NAME_DETAIL,
+        indices = @Index(value = DBConstants.COLUMN_HOUSE_ID, unique = true),
         foreignKeys = @ForeignKey(entity = House.class,
                 parentColumns = DBConstants.COLUMN_ID,
                 childColumns = DBConstants.COLUMN_HOUSE_ID))
@@ -132,11 +134,11 @@ public class HouseDetail implements DBConstants {
         return "HouseDetail{" +
                 "mId=" + mId +
                 ", mTitle='" + mTitle + '\'' +
-                ", mContents='" + mContents + '\'' +
                 ", mUrl='" + mUrl + '\'' +
                 ", mImageUrls=" + mImageUrls +
                 ", mImageUrlString='" + mImageUrlString + '\'' +
                 ", mHouseId=" + mHouseId +
+                ", mContents='" + mContents + '\'' +
                 '}';
     }
 

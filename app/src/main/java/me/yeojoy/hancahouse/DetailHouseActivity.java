@@ -100,6 +100,8 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
                 .observe(this, this::bindDataToView);
 
         mDetailViewModel.getAllHouseDetails().observe(this, allHouseDetails -> {
+            if (allHouseDetails == null) return;
+
             Log.e(TAG, "########################################################################");
             for (HouseDetail houseDetail : allHouseDetails) {
                 Log.e(TAG, houseDetail.toString());

@@ -11,7 +11,7 @@ import android.support.annotation.NonNull;
 import me.yeojoy.hancahouse.model.House;
 import me.yeojoy.hancahouse.model.HouseDetail;
 
-@Database(entities = { House.class, HouseDetail.class }, version = 5)
+@Database(entities = { House.class, HouseDetail.class }, version = 5, exportSchema = false)
 public abstract class HancaDatabase extends RoomDatabase implements DBConstants {
 
     public abstract HouseDao houseDao();
