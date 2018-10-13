@@ -72,9 +72,12 @@ task upload(type: Exec) {
     def HEADER_ARGS = "Dropbox-API-Arg: {\"path\": \"${destFilePath}\", \"mode\": \"overwrite\",\"autorename\": true,\"mute\": false,\"strict_conflict\": false}"
     def HEADER_CONTENT_TYPE = "Content-Type: application/octet-stream"
 
+    executable "/bin/bash"
+
     def COMMANDS = ["curl", "-X", "POST", API_URL, "--header", HEADER_AUTHORIZATION,
             "--header", HEADER_ARGS, "--header", HEADER_CONTENT_TYPE, "--data-binary",
             sourceFilePath]
-    COMMANDS.execute()
-//     def text = COMMANDS.execute().text
+    def text = COMMANDS.execute().text
+
+    println(text)
 }
