@@ -70,7 +70,7 @@ task upload(type: Exec) {
     def sourceFilePath = "@app/build/outputs/apk/debug/${fileName}"
 
     def HEADER_AUTHORIZATION = "Authorization: Bearer ${DROPBOX_AUTORIONZATION}"
-    def HEADER_ARGS = "Dropbox-API-Arg: {\"path\": \"${destFilePath}\", \"mode\": \"add\",\"autorename\": true,\"mute\": false,\"strict_conflict\": false}"
+    def HEADER_ARGS = "Dropbox-API-Arg: {\"path\": \"${destFilePath}\", \"mode\": \"overwrite\",\"autorename\": true,\"mute\": false,\"strict_conflict\": false}"
     def HEADER_CONTENT_TYPE = "Content-Type: application/octet-stream"
 
     println(API_URL)
@@ -82,10 +82,18 @@ task upload(type: Exec) {
     println(HEADER_CONTENT_TYPE)
 
     executable "/bin/sh"
+//
+//    args "-c", "curl -X POST ${API_URL} " +
+//            "--header \"${HEADER_AUTHORIZATION}\" " +
+//            "--header \"${HEADER_ARGS}\" " +
+//            "--header \"${HEADER_CONTENT_TYPE}\" " +
+//            "--data-binary ${sourceFilePath}"
 
-    args "-c", "curl -X POST ${API_URL} " +
-            "--header \"${HEADER_AUTHORIZATION}\" " +
-            "--header \"${HEADER_ARGS}\" " +
-            "--header \"${HEADER_CONTENT_TYPE}\" " +
-            "--data-binary ${sourceFilePath}"
+    def COMMANDS = ["curl", "-X", "POST", API_URL, "--header", HEADER_AUTHORIZATION,
+            "--header", HEADER_ARGS, "--header", HEADER_CONTENT_TYPE, "--data-binary",
+            sourceFilePath]
+    def text = COMMANDS.execute().text
+    println("----------------------------------------------------------------------------------------");
+    println(text)
+    println("----------------------------------------------------------------------------------------");
 }
