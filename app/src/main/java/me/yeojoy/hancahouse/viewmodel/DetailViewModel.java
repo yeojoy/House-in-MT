@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.util.List;
 
+import me.yeojoy.hancahouse.model.House;
 import me.yeojoy.hancahouse.model.HouseDetail;
 import me.yeojoy.hancahouse.repository.HouseDetailDBRepository;
 import me.yeojoy.hancahouse.repository.HouseDetailNetworkRepository;
@@ -18,6 +19,7 @@ public class DetailViewModel extends AndroidViewModel {
 
     private LiveData<HouseDetail> mHouseDetailLiveData;
     private LiveData<List<HouseDetail>> mAllHouseDetails;
+    private LiveData<House> mHouseLiveData;
 
     private HouseDetailDBRepository mHouseDetailDBRepository;
     private HouseDetailNetworkRepository mHouseDetailNetworkRepository;
@@ -56,5 +58,13 @@ public class DetailViewModel extends AndroidViewModel {
 
     public void deleteAllItems() {
         mHouseDetailDBRepository.deleteAll();
+    }
+
+    public LiveData<House> getHouseLiveData() {
+        return mHouseLiveData;
+    }
+
+    public void setHouseLiveData(LiveData<House> houseLiveData) {
+        mHouseLiveData = houseLiveData;
     }
 }

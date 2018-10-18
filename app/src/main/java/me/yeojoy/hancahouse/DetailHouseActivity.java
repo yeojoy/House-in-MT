@@ -1,5 +1,6 @@
 package me.yeojoy.hancahouse;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -108,6 +109,10 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
             }
             Log.e(TAG, "########################################################################");
         });
+
+        MutableLiveData<House> houseMutableLiveData = new MutableLiveData<>();
+        houseMutableLiveData.setValue(house);
+        mDetailViewModel.setHouseLiveData(houseMutableLiveData);
     }
 
     @Override
@@ -138,7 +143,7 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
                 return true;
             }
             case R.id.go_web_page: {
-                String url = mDetailViewModel.getHouseDetailLiveData().getValue().getUrl();
+                String url = mDetailViewModel.getHouseLiveData().getValue().getUrl();
                 Log.d(TAG, "url : " + url);
 
                 if (TextUtils.isEmpty(url)) {

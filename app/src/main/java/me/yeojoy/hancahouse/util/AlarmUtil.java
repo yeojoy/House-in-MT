@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.text.format.DateUtils;
 import android.util.Log;
 
-import me.yeojoy.hancahouse.BuildConfig;
 import me.yeojoy.hancahouse.app.AlarmBroadcaseReceiver;
 import me.yeojoy.hancahouse.app.Constants;
 
@@ -22,7 +21,7 @@ public class AlarmUtil implements Constants {
         final int TIME = PreferenceHelper.getCrawlerDurationTime(context);
         Log.d(TAG, "TIME : " + TIME);
 
-        long duration = TIME * (BuildConfig.DEBUG ? DateUtils.MINUTE_IN_MILLIS : DateUtils.HOUR_IN_MILLIS);
+        long duration = TIME * DateUtils.HOUR_IN_MILLIS;
 
         // AlarmManager 호출
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
