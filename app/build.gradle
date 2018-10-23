@@ -63,12 +63,20 @@ dependencies {
 }
 
 task upload(type: Exec) {
+    def DROPBOX_AUTHORIZATION = System.getenv("DROPBOX_AUTHORIZATION") ?: ""
+    println("DROPBOX_AUTHORIZATION: " + DROPBOX_AUTHORIZATION)
+
+    if (DROPBOX_AUTHORIZATION == null || DROPBOX_AUTHORIZATION == "") {
+        println("DROPBOX authorization is not valid.")
+        return
+    }
+
     def API_URL = "https://content.dropboxapi.com/2/files/upload"
     def fileName = "HancaHouse-debug-${rootProject.houseVersionCode}-${rootProject.houseVersionName}.apk"
     def destFilePath = "/hanca/${rootProject.houseVersionCode}/${fileName}"
     def sourceFilePath = "@app/build/outputs/apk/debug/${fileName}"
 
-    def HEADER_AUTHORIZATION = "Authorization: Bearer ${DROPBOX_AUTORIONZATION}"
+    def HEADER_AUTHORIZATION = "Authorization: Bearer ${DROPBOX_AUTHORIZATION}"
     def HEADER_ARGS = "Dropbox-API-Arg: {\"path\": \"${destFilePath}\", \"mode\": \"overwrite\",\"autorename\": true,\"mute\": false,\"strict_conflict\": false}"
     def HEADER_CONTENT_TYPE = "Content-Type: application/octet-stream"
 
