@@ -75,6 +75,11 @@ public class HouseDetailNetworkRepository implements Constants {
             Elements contents = detailDocument.select(SELECT_DETAIL_CONTENTS);
             Elements images = detailDocument.select(SELECT_DETAIL_IMAGES);
 
+            if (contents.size() < 1) {
+                Log.e(TAG, "no contents!!!");
+                return;
+            }
+
             Log.d(TAG, "contents > " + contents.toString());
 
             StringBuilder contentStringBuilder = new StringBuilder();
