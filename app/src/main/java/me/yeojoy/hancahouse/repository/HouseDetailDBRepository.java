@@ -1,8 +1,9 @@
 package me.yeojoy.hancahouse.repository;
 
-import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.os.AsyncTask;
+
+import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
