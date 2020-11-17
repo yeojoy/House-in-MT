@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Locale;
 
 import me.yeojoy.hancahouse.BuildConfig;
+import me.yeojoy.hancahouse.MainContract;
+import me.yeojoy.hancahouse.MainPresenter;
 import me.yeojoy.hancahouse.R;
 import me.yeojoy.hancahouse.app.Constants;
 import me.yeojoy.hancahouse.app.GlideApp;
@@ -28,9 +30,9 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
     private List<House> mHouses;
     private MainView mMainView;
 
-    public HouseAdapter(MainView mainView) {
+    public HouseAdapter(MainContract.Presenter presenter) {
         mHouses = new ArrayList<>();
-        mMainView = mainView;
+//        mMainView = mainView;
     }
 
     @NonNull
