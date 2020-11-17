@@ -5,13 +5,13 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion '29.0.2'
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
 
     defaultConfig {
         applicationId "me.yeojoy.hancahouse"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode houseVersionCode
         versionName houseVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -51,13 +51,13 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "androidx.appcompat:appcompat:1.1.0"
-    implementation "androidx.recyclerview:recyclerview:1.0.0"
-    implementation "com.android.support.constraint:constraint-layout:1.1.3"
+    implementation "androidx.appcompat:appcompat:1.2.0"
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation "com.android.support.constraint:constraint-layout:2.0.4"
     testImplementation "junit:junit:4.12"
     androidTestImplementation "androidx.test:runner:1.2.0"
     androidTestImplementation "androidx.test.espresso:espresso-core:3.2.0"
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.2.1'
     // Room components
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
     implementation "androidx.room:room-ktx:$rootProject.roomVersion"
@@ -72,32 +72,4 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
 
     implementation "com.google.code.gson:gson:2.8.5"
-}
-
-task upload(type: Exec) {
-    def DROPBOX_AUTHORIZATION = System.getenv("DROPBOX_AUTHORIZATION") ?: ""
-    println("DROPBOX_AUTHORIZATION: " + DROPBOX_AUTHORIZATION)
-
-    if (DROPBOX_AUTHORIZATION == null || DROPBOX_AUTHORIZATION == "") {
-        println("DROPBOX authorization is not valid.")
-        return
-    }
-
-    def API_URL = "https://content.dropboxapi.com/2/files/upload"
-    def fileName = "HancaHouse-debug-${rootProject.houseVersionCode}-${rootProject.houseVersionName}.apk"
-    def destFilePath = "/hanca/${rootProject.houseVersionCode}/${fileName}"
-    def sourceFilePath = "@app/build/outputs/apk/debug/${fileName}"
-
-    def HEADER_AUTHORIZATION = "Authorization: Bearer ${DROPBOX_AUTHORIZATION}"
-    def HEADER_ARGS = "Dropbox-API-Arg: {\"path\": \"${destFilePath}\", \"mode\": \"overwrite\",\"autorename\": true,\"mute\": false,\"strict_conflict\": false}"
-    def HEADER_CONTENT_TYPE = "Content-Type: application/octet-stream"
-
-    executable "/bin/bash"
-
-    def COMMANDS = ["curl", "-X", "POST", API_URL, "--header", HEADER_AUTHORIZATION,
-            "--header", HEADER_ARGS, "--header", HEADER_CONTENT_TYPE, "--data-binary",
-            sourceFilePath]
-    def text = COMMANDS.execute().text
-
-    println(text)
 }
