@@ -15,7 +15,7 @@ import me.yeojoy.hancahouse.repository.HouseDBRepository
 import me.yeojoy.hancahouse.util.AlarmUtil
 import me.yeojoy.hancahouse.util.AppPreferences
 
-class MainActivity : AppCompatActivity(), MainContract.View, Constants {
+class MainActivity : AppCompatActivity(), MainContract.View {
 
     private val TAG = MainActivity::class.simpleName
 

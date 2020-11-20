@@ -25,7 +25,7 @@ import me.yeojoy.hancahouse.app.GlideApp;
 import me.yeojoy.hancahouse.model.House;
 import me.yeojoy.hancahouse.view.MainView;
 
-public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHolder> implements Constants {
+public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHolder> {
 
     private List<House> mHouses;
     private MainView mMainView;
@@ -48,7 +48,7 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
         House house = mHouses.get(i);
 
         if (!TextUtils.isEmpty(house.getThumbnailUrl()) &&
-                !NO_IMAGE.equals(house.getThumbnailUrl())) {
+                !Constants.NO_IMAGE.equals(house.getThumbnailUrl())) {
             GlideApp.with(holder.mImageViewThumbnail)
                     .load(house.getThumbnailUrl())
                     .fitCenter()

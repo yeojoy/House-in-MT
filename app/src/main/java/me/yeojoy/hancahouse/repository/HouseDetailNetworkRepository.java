@@ -18,7 +18,7 @@ import java.util.List;
 import me.yeojoy.hancahouse.app.Constants;
 import me.yeojoy.hancahouse.model.HouseDetail;
 
-public class HouseDetailNetworkRepository implements Constants {
+public class HouseDetailNetworkRepository {
     private static final String TAG = HouseDetailNetworkRepository.class.getSimpleName();
 
     private static HouseDetailNetworkRepository sInstance;
@@ -46,7 +46,7 @@ public class HouseDetailNetworkRepository implements Constants {
                 String url = URLDecoder.decode(detailUrl, "UTF-8");
 
                 if (!url.startsWith("https://")) {
-                    url = HOST + url;
+                    url = Constants.HOST + url;
                 }
 
                 Log.d(TAG, "Detail House url : " + url);
@@ -72,8 +72,8 @@ public class HouseDetailNetworkRepository implements Constants {
                 return;
             }
 
-            Elements contents = detailDocument.select(SELECT_DETAIL_CONTENTS);
-            Elements images = detailDocument.select(SELECT_DETAIL_IMAGES);
+            Elements contents = detailDocument.select(Constants.SELECT_DETAIL_CONTENTS);
+            Elements images = detailDocument.select(Constants.SELECT_DETAIL_IMAGES);
 
             if (contents.size() < 1) {
                 Log.e(TAG, "no contents!!!");
@@ -87,12 +87,12 @@ public class HouseDetailNetworkRepository implements Constants {
             List<Node> childNodes = contents.get(0).childNodes();
 
             for (Node node : childNodes) {
-                if (node.nodeName().equals(NODE_NAME_IMAGE)) {
+                if (node.nodeName().equals(Constants.NODE_NAME_IMAGE)) {
                     continue;
                 }
 
                 String text = node.toString();
-                if (text.equals(NODE_NEW_LINE)) {
+                if (text.equals(Constants.NODE_NEW_LINE)) {
                     text = System.lineSeparator();
                 } else if (text.equals(" ")) {
                     continue;
@@ -107,7 +107,7 @@ public class HouseDetailNetworkRepository implements Constants {
 
             List<String> imageUrls = new ArrayList<>();
             for (Element e : images) {
-                imageUrls.add(e.attr(ATTR_SOURCE));
+                imageUrls.add(e.attr(Constants.ATTR_SOURCE));
             }
 
             String pattern = "\n{3,}";
