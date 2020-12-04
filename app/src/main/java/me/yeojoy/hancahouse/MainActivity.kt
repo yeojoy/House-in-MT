@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import me.yeojoy.hancahouse.app.Constants
 import me.yeojoy.hancahouse.app.adapter.HouseAdapter
 import me.yeojoy.hancahouse.model.House
 import me.yeojoy.hancahouse.repository.HouseDBRepository

@@ -5,6 +5,8 @@ import me.yeojoy.hancahouse.repository.HouseDBRepository
 
 class MainPresenter(view: MainContract.View) : MainContract.Presenter {
 
+    private var houses: MutableList<House> = mutableListOf()
+
     override fun retrieveHouses(reponsitory: HouseDBRepository) {
 
     }
@@ -39,6 +41,14 @@ class MainPresenter(view: MainContract.View) : MainContract.Presenter {
 
     override fun optionDeleteAllClicked() {
 
+    }
+
+    override fun numberOfHouses() : Int {
+        return houses.size
+    }
+
+    override fun houseAt(position: Int): House {
+        return houseAt(position)
     }
 
     override fun onViewCreated() {

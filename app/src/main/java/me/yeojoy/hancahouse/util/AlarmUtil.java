@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.text.format.DateUtils;
 import android.util.Log;
 
-import me.yeojoy.hancahouse.app.AlarmBroadcaseReceiver;
+import me.yeojoy.hancahouse.app.AlarmBroadcastReceiver;
 import me.yeojoy.hancahouse.app.Constants;
 
 public class AlarmUtil implements Constants {
@@ -44,7 +44,7 @@ public class AlarmUtil implements Constants {
 
     public static boolean isAlarmManagerRunning(Context context) {
         Log.i(TAG, "isAlarmManagerRunning()");
-        Intent intent = new Intent(context, AlarmBroadcaseReceiver.class);
+        Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
         intent.setAction(ACTION_START_CRAWLER);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
                 intent, PendingIntent.FLAG_NO_CREATE);
@@ -53,7 +53,7 @@ public class AlarmUtil implements Constants {
     }
 
     private static PendingIntent getBroadcastPendingIntent(Context context) {
-        Intent intent = new Intent(context, AlarmBroadcaseReceiver.class);
+        Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
         intent.setAction(ACTION_START_CRAWLER);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
                 intent, PendingIntent.FLAG_CANCEL_CURRENT);

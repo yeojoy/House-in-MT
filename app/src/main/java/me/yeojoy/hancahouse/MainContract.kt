@@ -17,6 +17,9 @@ interface MainContract {
         fun optionSettingClicked()
         fun optionManageAlarmClicked()
         fun optionDeleteAllClicked()
+
+        fun numberOfHouses() : Int
+        fun houseAt(position: Int): House
     }
 
     interface View : BaseView<Presenter> {

@@ -31,7 +31,7 @@
 
         <activity android:name=".WebActivity" />
 
-        <receiver android:name=".app.AlarmBroadcaseReceiver"
+        <receiver android:name=".app.AlarmBroadcastReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
