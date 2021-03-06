@@ -133,8 +133,11 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
     @TargetApi(Build.VERSION_CODES.O)
     private fun showNotificationMoreThanOreo(context: Context, newMessageNotificationBuilder: Notification.Builder) {
 
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE)
-        val channel = NotificationChannel(CHANNEL_ID, "New", NotificationManager.IMPORTANCE_HIGH)
+        val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channel = NotificationChannel(CHANNEL_ID, "New", NotificationManager.IMPORTANCE_DEFAULT).apply {
+            // description = descriptionText
+        }
+
         notificationManager.createNotificationChannel(channel)
 
         notificationManager.notify(1, newMessageNotificationBuilder.build())

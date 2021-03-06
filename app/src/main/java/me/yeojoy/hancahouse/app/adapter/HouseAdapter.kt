@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import me.yeojoy.hancahouse.BuildConfig
 import me.yeojoy.hancahouse.MainContract
 import me.yeojoy.hancahouse.R
 import me.yeojoy.hancahouse.app.Constants
-import me.yeojoy.hancahouse.app.GlideApp
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,7 +26,7 @@ class HouseAdapter(private val presenter: MainContract.Presenter)
     override fun onBindViewHolder(holder: HouseViewHolder, position: Int) {
         val house = presenter.houseAt(position)
         if (house.thumbnailUrl.isNotEmpty() && !house.thumbnailUrl.equals(Constants.NO_IMAGE)) {
-            GlideApp.with(holder.itemView)
+            Glide.with(holder.itemView)
                     .load(house.thumbnailUrl)
                     .fitCenter()
                     .placeholder(R.drawable.ic_home_black_24dp)

@@ -1,4 +1,4 @@
-package me.yeojoy.hancahouse;
+package me.yeojoy.hancahouse.detail;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -27,27 +27,25 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModelProviders;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
+import me.yeojoy.hancahouse.BuildConfig;
+import me.yeojoy.hancahouse.R;
+import me.yeojoy.hancahouse.WebActivity;
 import me.yeojoy.hancahouse.app.Constants;
-import me.yeojoy.hancahouse.app.GlideApp;
 import me.yeojoy.hancahouse.model.House;
 import me.yeojoy.hancahouse.model.HouseDetail;
-import me.yeojoy.hancahouse.viewmodel.DetailViewModel;
 
-public class DetailHouseActivity extends AppCompatActivity implements Constants {
+public class DetailHouseActivity extends AppCompatActivity {
     private static final String TAG = DetailHouseActivity.class.getSimpleName();
 
     private TextView mTextViewDescription;
     private ProgressBar mProgressBarLoading;
 
     private LinearLayout mLinearLayoutImages;
-
-    private DetailViewModel mDetailViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,11 +80,11 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
         mLinearLayoutImages = findViewById(R.id.linear_layout_images);
 
         if (!TextUtils.isEmpty(house.getThumbnailUrl()) &&
-                !house.getThumbnailUrl().equals(NO_IMAGE)) {
+                !house.getThumbnailUrl().equals(Constants.NO_IMAGE)) {
 
             final String SIZE = "-120x90";
             String imageUrl = house.getThumbnailUrl().replace(SIZE, "");
-            GlideApp.with(this)
+            Glide.with(this)
                     .load(imageUrl)
                     .centerCrop()
                     .into(imageViewThumbnail);
@@ -96,6 +94,7 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitle(house.getAuthor());
 
+        /*
         mDetailViewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
         mDetailViewModel.loadPage(house.getId(), house.getTitle(), house.getUrl());
 
@@ -115,16 +114,17 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
         MutableLiveData<House> houseMutableLiveData = new MutableLiveData<>();
         houseMutableLiveData.setValue(house);
         mDetailViewModel.setHouseLiveData(houseMutableLiveData);
+        */
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        HouseDetail houseDetail = mDetailViewModel.getHouseDetailLiveData().getValue();
+//        HouseDetail houseDetail = mDetailViewModel.getHouseDetailLiveData().getValue();
 
-        if (houseDetail != null && !TextUtils.isEmpty(houseDetail.getContents())) {
-            mProgressBarLoading.setVisibility(View.GONE);
-        }
+//        if (houseDetail != null && !TextUtils.isEmpty(houseDetail.getContents())) {
+//            mProgressBarLoading.setVisibility(View.GONE);
+//        }
     }
 
     @Override
@@ -145,7 +145,8 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
                 return true;
             }
             case R.id.go_web_page: {
-                String url = mDetailViewModel.getHouseLiveData().getValue().getUrl();
+//                String url = mDetailViewModel.getHouseLiveData().getValue().getUrl();
+                String url = "https://google.com/images";
                 Log.d(TAG, "url : " + url);
 
                 if (TextUtils.isEmpty(url)) {
@@ -155,12 +156,12 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
                 }
 
                 Intent intent = new Intent(this, WebActivity.class);
-                intent.putExtra(KEY_INTENT_URL, url);
+                intent.putExtra(Constants.KEY_INTENT_URL, url);
                 startActivity(intent);
                 return true;
             }
             case R.id.delete_all_from_table: {
-                mDetailViewModel.deleteAllItems();
+//                mDetailViewModel.deleteAllItems();
             }
         }
         return super.onOptionsItemSelected(item);
@@ -183,18 +184,19 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
         mTextViewDescription.setText(getDetailDescription(houseDetail.getContents()));
 
         mLinearLayoutImages.removeAllViews();
-
+        /*
         for (String url : houseDetail.getImageUrls()) {
 
-            String imageUrl = HOST + url;
+            String imageUrl = Constants.HOST + url;
             Log.d(TAG, "baindDataToView imageUrl >> " + imageUrl);
             ImageView imageView = new ImageView(this);
-            GlideApp.with(this)
+            Glide.with(this)
                     .load(imageUrl)
                     .into(imageView);
 
             mLinearLayoutImages.addView(imageView, getImageLayoutParams());
         }
+        */
     }
 
     private LinearLayout.LayoutParams getImageLayoutParams() {
@@ -209,10 +211,10 @@ public class DetailHouseActivity extends AppCompatActivity implements Constants 
         Log.d(TAG, "contents : " + contents);
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
 
-        int indexOfEmail = contents.indexOf(TITLE_EMAIL) + TITLE_EMAIL.length();
-        int indexOfPhoneStart = contents.indexOf(TITLE_PHONE);
-        int indexOfPhoneEnd = indexOfPhoneStart + TITLE_PHONE.length();
-        int indexOfRegion = contents.indexOf(TITLE_REGION);
+        int indexOfEmail = contents.indexOf(Constants.TITLE_EMAIL) + Constants.TITLE_EMAIL.length();
+        int indexOfPhoneStart = contents.indexOf(Constants.TITLE_PHONE);
+        int indexOfPhoneEnd = indexOfPhoneStart + Constants.TITLE_PHONE.length();
+        int indexOfRegion = contents.indexOf(Constants.TITLE_REGION);
 
         spannableStringBuilder.append(contents.substring(0, indexOfEmail));
         spannableStringBuilder.append(" ");
