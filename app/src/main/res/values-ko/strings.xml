@@ -19,19 +19,8 @@
     <string name="dialog_hour_picker_ok">확인</string>
     <string name="dialog_hour_picker_cancel">취소</string>
 
-    <!-- Alarm -->
-    <string name="toast_alarm_running">알람이 실행 중입니다.</string>
-    <string name="toast_alarm_stopped">알람이 종료 됐습니다.</string>
-    <string name="toast_alarm_start">\"자동으로 가져오기\"를 시작합니다.</string>
-    <string name="toast_alarm_stop">\"자동으로 가져오기\"를 종료합니다.</string>
-    <string name="toast_alarm_restart_formatter" formatted="false">%d 시간 간격으로 \"자동으로 가져오기\"를 재실행 합니다.</string>
-
     <!-- menu title -->
     <string name="go_setting">설정</string>
-    <string name="start_crawler">\"자동으로 가져오기\" 시작</string>
-    <string name="stop_crawler">\"자동으로 가져오기\" 끝내기</string>
-    <string name="check_crawler">알람 확인</string>
-    <string name="delete_all_from_table">모두 삭제</string>
 
     <string name="go_web_page">웹으로 보기</string>
 

@@ -3,10 +3,4 @@
     <item android:id="@+id/go_setting"
         android:title="@string/go_setting" >
     </item>
-    <item android:id="@+id/start_crawler"
-        android:title="@string/start_crawler" >
-    </item>
-    <item android:id="@+id/stop_crawler"
-        android:title="@string/stop_crawler" >
-    </item>
 </menu>

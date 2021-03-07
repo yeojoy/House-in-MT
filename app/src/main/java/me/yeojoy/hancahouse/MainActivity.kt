@@ -52,11 +52,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
-
-        if (BuildConfig.DEBUG) {
-            menu?.add(0, R.id.check_alarm_manager, 2, R.string.check_crawler)
-            menu?.add(0, R.id.delete_all_from_table, 3, R.string.delete_all_from_table)
-        }
         return true
     }
 
@@ -76,14 +71,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             R.id.go_setting -> {
                 val intent = Intent(this, SettingActivity::class.java)
                 startActivity(intent)
-                return true
-            }
-            R.id.start_crawler -> {
-                // TODO startCrawler and then notify start
-                return true
-            }
-            R.id.stop_crawler -> {
-                // TODO stopCrawler and then notify start
                 return true
             }
             R.id.check_alarm_manager -> {
