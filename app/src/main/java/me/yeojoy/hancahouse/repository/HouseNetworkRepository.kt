@@ -1,7 +1,6 @@
 package me.yeojoy.hancahouse.repository;
 
 import me.yeojoy.hancahouse.app.Constants
-import me.yeojoy.hancahouse.db.DBConstants
 import me.yeojoy.hancahouse.model.House
 import org.jsoup.Connection
 import org.jsoup.Jsoup
@@ -11,7 +10,7 @@ import java.net.URLDecoder
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HouseNetworkRepository: DBConstants {
+class HouseNetworkRepository {
 
     fun loadPage(page: Int): List<House> {
         val houses = mutableListOf<House>()
@@ -48,10 +47,9 @@ class HouseNetworkRepository: DBConstants {
 
                     val parsedTime = SimpleDateFormat(Constants.PARSED_TIME_FORMATTER, Locale.getDefault()).format(Date())
 
-                    val house = House(0, title ?: "", thumbnailUrl,
+                    val house = House(title ?: "", thumbnailUrl,
                         detailUrl ?: "", author ?: "",
-                            date?.time ?: 0, parsedTime, uid?.toLong() ?: 0L,
-                            if (index == 0) DBConstants.TYPE_RENT else DBConstants.TYPE_SUBLET)
+                            date?.time ?: 0L, parsedTime, uid?.toLong() ?: 0L)
                     houses.add(house)
                 }
             }

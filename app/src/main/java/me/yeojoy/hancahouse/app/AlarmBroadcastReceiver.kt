@@ -1,26 +1,18 @@
 package me.yeojoy.hancahouse.app
 
 import android.annotation.TargetApi
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.TaskStackBuilder
+import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.util.Log
-
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-
 import me.yeojoy.hancahouse.BuildConfig
 import me.yeojoy.hancahouse.MainActivity
 import me.yeojoy.hancahouse.R
-import me.yeojoy.hancahouse.db.HancaDatabase
-import me.yeojoy.hancahouse.model.House
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -35,50 +27,6 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         Log.d(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>> onReceive() <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
         Log.d(TAG, "***************************************************************************")
         Log.d(TAG, "***************************************************************************")
-
-        startCrawling(context)
-    }
-
-    private fun startCrawling(context: Context?) {
-        Log.d(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>> startCrawling() <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-//        HouseNetworkRepository houseNetworkRepository = HouseNetworkRepository.getInstance()
-//        houseNetworkRepository.loadPage(1, houses -> saveHousesToDatabase(context, houses))
-    }
-
-    private fun saveHousesToDatabase(context: Context, houses: MutableList<House>) {
-        Log.d(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>> saveHousesToDatabase() <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-
-        val hancaDatabase = HancaDatabase.getDatabase(context)
-        val houseDao = hancaDatabase.houseDao()
-        val allHouses = houseDao.getAllRawRents()
-
-        if (allHouses == null || allHouses.isEmpty()) {
-            Log.e(TAG, "There is no house.")
-            return
-        }
-
-        val iterator = houses.iterator()
-        while (iterator.hasNext()) {
-            val house = iterator.next()
-            if (allHouses.contains(house)) {
-                Log.d(TAG, "UID, " + house.uid + ", is deleted.")
-                iterator.remove()
-            }
-        }
-
-        if (houses.isEmpty()) {
-            Log.e(TAG, "There is no new house.")
-            return
-        }
-
-        Log.d(TAG, "***************************************************************************")
-        for (h in houses) {
-            Log.d(TAG, h.toString())
-        }
-        Log.d(TAG, "***************************************************************************")
-
-        notifyNewHouse(context, houses.size)
-
     }
 
     @SuppressWarnings("deprecation")
