@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -21,7 +22,7 @@ class WebActivity : AppCompatActivity() {
         val TAG = WebActivity::class.simpleName
     }
 
-    lateinit var progressBar : ProgressBar
+    private lateinit var progressBar : ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,56 +37,55 @@ class WebActivity : AppCompatActivity() {
             return
         }
 
-        var url : String? = intent.getStringExtra(Constants.KEY_INTENT_URL)
+        var url : String = intent.getStringExtra(Constants.KEY_INTENT_URL) ?: ""
 
         if (TextUtils.isEmpty(url)) {
             finish()
             return
         }
 
-        if (!url!!.startsWith("https://")) {
+        if (!url.startsWith("https://")) {
             url = Constants.HOST + url
         }
 
-        Log.d(TAG, "Url >>> " + url)
+        Log.d(TAG, "Url >>> $url")
 
         val webView : WebView = findViewById(R.id.webview)
         progressBar = findViewById(R.id.progress_bar_loading)
-        settingWebview(webView)
+        setupWebViewSettings(webView)
 
         webView.loadUrl(url)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.getItemId() == android.R.id.home) {
+        if (item.itemId == android.R.id.home) {
             finish()
             return true
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun settingWebview(webView : WebView){
-        val settings : WebSettings = webView.getSettings()
-        settings.setJavaScriptEnabled(true)
-        settings.setJavaScriptCanOpenWindowsAutomatically(true)
-        settings.setLoadsImagesAutomatically(true)
-        settings.setUseWideViewPort(true)
+    private fun setupWebViewSettings(webView : WebView){
+        val settings : WebSettings = webView.settings
+//        settings.javaScriptEnabled = true
+        settings.javaScriptCanOpenWindowsAutomatically = true
+        settings.loadsImagesAutomatically = true
+        settings.useWideViewPort = true
+        settings.cacheMode = WebSettings.LOAD_NO_CACHE
+        settings.domStorageEnabled = true
+        settings.allowFileAccess = true
+        settings.userAgentString = "app"
+        webView.webChromeClient = WebChromeClient()
+        webView.webViewClient = HancaWebViewClient(progressBar)
         settings.setSupportZoom(false)
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE)
         settings.setAppCacheEnabled(false)
-        settings.setDomStorageEnabled(true)
-        settings.setAllowFileAccess(true)
-        settings.setUserAgentString("app")
-        webView.setWebChromeClient(WebChromeClient())
-        webView.setWebViewClient(HancaWebViewClient(progressBar))
     }
 
-    private class HancaWebViewClient(progressBar: ProgressBar) : WebViewClient() {
-
+    private class HancaWebViewClient(private val progressBar: ProgressBar) : WebViewClient() {
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
 
-//            progressBar.setVisibility(View.GONE)
+            progressBar.visibility = View.GONE
         }
     }
 }
