@@ -21,15 +21,12 @@ import me.yeojoy.hancahouse.MainActivity
 import me.yeojoy.hancahouse.R
 import me.yeojoy.hancahouse.db.HancaDatabase
 import me.yeojoy.hancahouse.model.House
-import me.yeojoy.hancahouse.repository.HouseDBRepository
 import java.text.SimpleDateFormat
 import java.util.*
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {
     private val TAG = AlarmBroadcastReceiver::class.java.simpleName
     val CHANNEL_ID = "hanca"
-
-    private var houseDBRepository: HouseDBRepository? = null
 
     override fun onReceive(context: Context?, intent: Intent?) {
 
@@ -38,7 +35,6 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         Log.d(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>> onReceive() <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
         Log.d(TAG, "***************************************************************************")
         Log.d(TAG, "***************************************************************************")
-        houseDBRepository = HouseDBRepository(context)
 
         startCrawling(context)
     }
@@ -81,7 +77,6 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         }
         Log.d(TAG, "***************************************************************************")
 
-        houseDBRepository?.saveHouses(houses)
         notifyNewHouse(context, houses.size)
 
     }

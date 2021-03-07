@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -11,13 +12,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import me.yeojoy.hancahouse.app.adapter.HouseAdapter
 import me.yeojoy.hancahouse.detail.DetailHouseActivity
 import me.yeojoy.hancahouse.model.House
-import me.yeojoy.hancahouse.repository.HouseDBRepository
-import me.yeojoy.hancahouse.util.AlarmUtil
 import me.yeojoy.hancahouse.util.AppPreferences
 
 class MainActivity : AppCompatActivity(), MainContract.View {
-
-    private val TAG = MainActivity::class.simpleName
+    companion object {
+        val TAG = MainActivity::class.simpleName
+    }
 
     private lateinit var presenter: MainContract.Presenter
     private lateinit var recyclerView: RecyclerView
@@ -26,14 +26,16 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setPresenter(MainPresenter(this))
+        presenter.onViewCreated()
 
         recyclerView = findViewById(R.id.recyclerview)
         recyclerView.adapter = HouseAdapter(presenter)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         val floatActionButton = findViewById<FloatingActionButton>(R.id.floating_action_button_refresh)
-        val houseDBRepository = HouseDBRepository(application)
-        floatActionButton.setOnClickListener { presenter.retrieveHouses(houseDBRepository) }
+        floatActionButton.setOnClickListener {
+            // TODO load list
+        }
 
         presenter.retrieveHouses()
         // TODO if this is first launch, load page 2 and 3.
@@ -41,6 +43,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         if (AppPreferences.crawlerStatus.equals("on")) {
             // TODO start Crawler
         }
+    }
+
+    override fun onDestroy() {
+        presenter.onViewDestroyed()
+        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -92,25 +99,12 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun startCrawler() {
-        AlarmUtil.startCrawlerWithTime(this);
-        AppPreferences.crawlerStatus = "on"
-    }
-
-    private fun stopCrawler() {
-        AlarmUtil.stopCrawler(this);
-        AppPreferences.crawlerStatus = "off"
-    }
-
-
-    private fun checkCrawler() {
-        // TODO check crawler isRunning ask to AlarmUtil.
-//        Toast.makeText(this, AlarmUtil.isAlarmManagerRunning(this) ?
-//                        R.string.toast_alarm_running : R.string.toast_alarm_stopped,
-//                Toast.LENGTH_SHORT).show();
-    }
-
-    override fun onGetHouses(houses: List<House>) {
+    override fun onGetHouses(hasError: Boolean) {
+        if (hasError) {
+            Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
+        } else {
+            recyclerView.adapter?.notifyDataSetChanged()
+        }
     }
 
     override fun turnedOnAlarmManager() {

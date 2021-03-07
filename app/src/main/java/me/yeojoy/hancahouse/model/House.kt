@@ -26,7 +26,7 @@ data class House(
         @ColumnInfo(name = DBConstants.COLUMN_DATE)
         var date: Long = 0L,
         @ColumnInfo(name = DBConstants.COLUMN_PARSED_TIME)
-        var partedDateTime: String = "",
+        var parsedDateTime: String = "",
         @ColumnInfo(name = DBConstants.COLUMN_UID)
         var uid: Long = 0,
         @ColumnInfo(name = DBConstants.COLUMN_BOARD_TYPE)

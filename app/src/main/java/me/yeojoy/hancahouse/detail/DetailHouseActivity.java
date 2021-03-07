@@ -42,10 +42,10 @@ import me.yeojoy.hancahouse.model.HouseDetail;
 public class DetailHouseActivity extends AppCompatActivity {
     private static final String TAG = DetailHouseActivity.class.getSimpleName();
 
-    private TextView mTextViewDescription;
-    private ProgressBar mProgressBarLoading;
+    private TextView textViewDescription;
+    private ProgressBar progressBarLoading;
 
-    private LinearLayout mLinearLayoutImages;
+    private LinearLayout linearLayoutImages;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,12 +72,12 @@ public class DetailHouseActivity extends AppCompatActivity {
         ImageView imageViewThumbnail = findViewById(R.id.image_view_thumbnail);
 
         TextView textViewTitle = findViewById(R.id.text_view_title);
-        mTextViewDescription = findViewById(R.id.text_view_description);
-        mTextViewDescription.setMovementMethod(LinkMovementMethod.getInstance());
+        textViewDescription = findViewById(R.id.text_view_description);
+        textViewDescription.setMovementMethod(LinkMovementMethod.getInstance());
 
-        mProgressBarLoading = findViewById(R.id.progress_bar_loading);
+        progressBarLoading = findViewById(R.id.progress_bar_loading);
 
-        mLinearLayoutImages = findViewById(R.id.linear_layout_images);
+        linearLayoutImages = findViewById(R.id.linear_layout_images);
 
         if (!TextUtils.isEmpty(house.getThumbnailUrl()) &&
                 !house.getThumbnailUrl().equals(Constants.NO_IMAGE)) {
@@ -179,11 +179,11 @@ public class DetailHouseActivity extends AppCompatActivity {
             return;
         }
 
-        mProgressBarLoading.setVisibility(View.GONE);
+        progressBarLoading.setVisibility(View.GONE);
 
-        mTextViewDescription.setText(getDetailDescription(houseDetail.getContents()));
+        textViewDescription.setText(getDetailDescription(houseDetail.getContents()));
 
-        mLinearLayoutImages.removeAllViews();
+        linearLayoutImages.removeAllViews();
         /*
         for (String url : houseDetail.getImageUrls()) {
 

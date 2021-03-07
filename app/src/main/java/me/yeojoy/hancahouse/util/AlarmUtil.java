@@ -10,7 +10,7 @@ import android.util.Log;
 import me.yeojoy.hancahouse.app.AlarmBroadcastReceiver;
 import me.yeojoy.hancahouse.app.Constants;
 
-public class AlarmUtil implements Constants {
+public class AlarmUtil {
     private static final String TAG = AlarmUtil.class.getSimpleName();
 
     public static void startCrawlerWithTime(Context context) {
@@ -45,7 +45,7 @@ public class AlarmUtil implements Constants {
     public static boolean isAlarmManagerRunning(Context context) {
         Log.i(TAG, "isAlarmManagerRunning()");
         Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
-        intent.setAction(ACTION_START_CRAWLER);
+        intent.setAction(Constants.ACTION_START_CRAWLER);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
                 intent, PendingIntent.FLAG_NO_CREATE);
 
@@ -54,7 +54,7 @@ public class AlarmUtil implements Constants {
 
     private static PendingIntent getBroadcastPendingIntent(Context context) {
         Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
-        intent.setAction(ACTION_START_CRAWLER);
+        intent.setAction(Constants.ACTION_START_CRAWLER);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
                 intent, PendingIntent.FLAG_CANCEL_CURRENT);
 

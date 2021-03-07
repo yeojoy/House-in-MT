@@ -21,8 +21,6 @@ public interface DBConstants {
     String COLUMN_IMAGE_URL = "image_url";
     String COLUMN_HOUSE_ID = "house_id";
 
-
-
     int TYPE_RENT = 1;
     int TYPE_SUBLET = 2;
 }
