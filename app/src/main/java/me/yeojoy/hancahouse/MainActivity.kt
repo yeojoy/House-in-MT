@@ -28,6 +28,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setPresenter(MainPresenter(this))
+
+        setSupportActionBar(toolbar)
+
         presenter.onViewCreated()
 
         recyclerView = findViewById(R.id.recyclerview)

@@ -7,6 +7,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 import java.net.URLDecoder
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -35,7 +36,7 @@ class HouseNetworkRepository {
                 for ((i, thumbnail) in thumbnails.withIndex()) {
                     val title = titles?.get(i)?.text()
                     val author = authors?.get(i)?.text()
-                    val dateString = dates?.get(i)?.text()
+                    var dateString = dates?.get(i)?.text()
 
                     val thumbnailUrl = thumbnail?.select(Constants.SELECT_IMAGES)?.attr(Constants.ATTR_SOURCE) ?: Constants.NO_IMAGE
                     val detailUrl = thumbnail?.attr(Constants.ATTR_HREF)
@@ -43,7 +44,14 @@ class HouseNetworkRepository {
                     val uid = detailUrl?.substring(uidIndex!! + Constants.TEXT_UID.length)
 
                     val formatter = SimpleDateFormat(Constants.WEB_DATE_FORMATTER, Locale.getDefault())
-                    val date: Date? = formatter.parse(dateString)
+                    var date: Date?
+                    try {
+                        date = formatter.parse(dateString)
+                    } catch (e: ParseException) {
+                        val calendar = Calendar.getInstance(Locale.getDefault())
+                        dateString = "${calendar.get(Calendar.YEAR)}.${calendar.get(Calendar.MONTH) + 1}.${calendar.get(Calendar.DATE)} $dateString"
+                        date = formatter.parse(dateString)
+                    }
 
                     val parsedTime = SimpleDateFormat(Constants.PARSED_TIME_FORMATTER, Locale.getDefault()).format(Date())
 

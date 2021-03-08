@@ -2,6 +2,7 @@ package me.yeojoy.hancahouse
 
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.Switch
 import android.widget.TextView
@@ -22,8 +23,6 @@ class SettingActivity : AppCompatActivity() {
         val TAG = SettingActivity::class.simpleName
     }
 
-    lateinit var textViewTime : TextView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
@@ -32,6 +31,15 @@ class SettingActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
