@@ -4,11 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.activity_main.*
 import me.yeojoy.hancahouse.app.adapter.HouseAdapter
 import me.yeojoy.hancahouse.detail.DetailHouseActivity
 import me.yeojoy.hancahouse.model.House
@@ -40,9 +42,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         presenter.retrieveHouses()
         // TODO if this is first launch, load page 2 and 3.
 
-        if (AppPreferences.crawlerStatus.equals("on")) {
-            // TODO start Crawler
-        }
     }
 
     override fun onDestroy() {
@@ -55,31 +54,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         return true
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        // TODO check running status
-        // and then button visible
-//        boolean isRunning = AlarmUtil.isAlarmManagerRunning(this);
-//        MenuItem startItem = menu.findItem(R.id.start_crawler);
-//        MenuItem stopItem = menu.findItem(R.id.stop_crawler);
-//        startItem.setVisible(!isRunning);
-//        stopItem.setVisible(isRunning);
-        return true
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.go_setting -> {
                 val intent = Intent(this, SettingActivity::class.java)
                 startActivity(intent)
-                return true
-            }
-            R.id.check_alarm_manager -> {
-                // TODO call checkCrawler()
-                return true
-            }
-            R.id.delete_all_from_table -> {
-                presenter.optionDeleteAllClicked()
-                AppPreferences.isFirstLaunch = true
                 return true
             }
         }
@@ -89,15 +68,13 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     override fun onGetHouses(hasError: Boolean) {
         if (hasError) {
             Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
+            textViewEmptyList.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
         } else {
+            textViewEmptyList.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
             recyclerView.adapter?.notifyDataSetChanged()
         }
-    }
-
-    override fun turnedOnAlarmManager() {
-    }
-
-    override fun turnedOffAlarmManager() {
     }
 
     override fun onItemClicked(house: House) {

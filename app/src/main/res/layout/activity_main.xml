@@ -29,12 +29,23 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         tools:listitem="@layout/row_house" />
 
+    <TextView
+        android:id="@+id/textViewEmptyList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:text="@string/warn_empty_list"
+        app:layout_constraintBaseline_toBaselineOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_action_button_refresh"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_marginBottom="12dp"
         android:layout_marginRight="12dp"
+        android:layout_marginBottom="12dp"
         android:src="@drawable/ic_refresh_white_40dp"
         app:layout_constraintBottom_toBottomOf="@id/recyclerview"
         app:layout_constraintRight_toRightOf="@id/recyclerview" />

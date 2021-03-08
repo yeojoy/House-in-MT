@@ -10,12 +10,9 @@ class MainPresenter(view: MainContract.View) : MainContract.Presenter {
     private var view = view
 
     private val parentJob = Job()
-    private val coroutineExceptionHandler: CoroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+    private val coroutineExceptionHandler: CoroutineExceptionHandler
+            = CoroutineExceptionHandler { _, throwable ->
         coroutineScope.launch(Dispatchers.Main) {
-            // When there is an error, add a house object and return.
-//            val house = House(99, "Error", "https://", "https://googl.com", "Yeojong", 0L, "2021-03-07", 0L, 0)
-//            val houses = mutableListOf<House>()
-//            houses.add(house)
             view.onGetHouses(true)
         }
 
@@ -35,7 +32,7 @@ class MainPresenter(view: MainContract.View) : MainContract.Presenter {
                 System.out.println(h.author)
             }
             houses.addAll(hs)
-            view.onGetHouses(false)
+            view.onGetHouses(houses.isEmpty())
         }
     }
 
@@ -43,23 +40,7 @@ class MainPresenter(view: MainContract.View) : MainContract.Presenter {
         view.onItemClicked(houseAt(position))
     }
 
-    override fun optionStartCrawlerClicked() {
-
-    }
-
-    override fun optionStopCrawlerClicked() {
-
-    }
-
     override fun optionSettingClicked() {
-
-    }
-
-    override fun optionManageAlarmClicked() {
-
-    }
-
-    override fun optionDeleteAllClicked() {
 
     }
 

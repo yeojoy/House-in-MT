@@ -7,6 +7,8 @@
     <string name="notification_title">Hanca Sublet</string>
     <string name="notification_content_formatter" formatted="false">There is(are) %d new houses</string>
 
+    <string name="warn_empty_list">There is no list.</string>
+
     <!-- Setting -->
     <string name="title_setting">Setting</string>
 

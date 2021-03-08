@@ -7,6 +7,8 @@
     <string name="notification_title">한카 렌트</string>
     <string name="notification_content_formatter" formatted="false">%d개의 집이 새롭게 올라왔습니다.</string>
 
+    <string name="warn_empty_list">가져올 리스트가 없습니다.</string>
+
     <!-- Setting -->
     <string name="title_setting">설정</string>
 

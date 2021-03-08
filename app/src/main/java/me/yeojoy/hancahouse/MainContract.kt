@@ -9,11 +9,7 @@ interface MainContract {
         fun retrieveHouses()
         fun houseItemClicked(position: Int)
 
-        fun optionStartCrawlerClicked()
-        fun optionStopCrawlerClicked()
         fun optionSettingClicked()
-        fun optionManageAlarmClicked()
-        fun optionDeleteAllClicked()
 
         fun numberOfHouses() : Int
         fun houseAt(position: Int): House
@@ -21,8 +17,6 @@ interface MainContract {
 
     interface View : BaseView<Presenter> {
         fun onGetHouses(hasError: Boolean)
-        fun turnedOnAlarmManager()
-        fun turnedOffAlarmManager()
 
         fun onItemClicked(house: House)
         fun refreshResult(houses: List<House>?)
