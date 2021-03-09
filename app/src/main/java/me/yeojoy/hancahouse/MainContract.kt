@@ -2,10 +2,11 @@ package me.yeojoy.hancahouse
 
 import me.yeojoy.hancahouse.app.BasePresenter
 import me.yeojoy.hancahouse.app.BaseView
+import me.yeojoy.hancahouse.app.ItemClickAction
 import me.yeojoy.hancahouse.model.House
 
 interface MainContract {
-    interface Presenter : BasePresenter, HouseClickAction {
+    interface Presenter : BasePresenter, ItemClickAction {
         fun retrieveHouses()
         fun houseItemClicked(position: Int)
 

@@ -9,6 +9,11 @@
 
     <string name="warn_empty_list">가져올 리스트가 없습니다.</string>
 
+    <!-- Main -->
+    <string name="tab_name_sublet">서브렛</string>
+    <string name="tab_name_rent">집 렌트</string>
+    <string name="tab_name_selling">팝니다</string>
+
     <!-- Setting -->
     <string name="title_setting">설정</string>
 

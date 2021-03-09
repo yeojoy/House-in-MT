@@ -1,6 +1,5 @@
 package me.yeojoy.hancahouse.detail
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -18,24 +17,24 @@ import me.yeojoy.hancahouse.R
 import me.yeojoy.hancahouse.WebActivity
 import me.yeojoy.hancahouse.app.Constants
 import me.yeojoy.hancahouse.model.House
-import me.yeojoy.hancahouse.model.HouseDetail
+import me.yeojoy.hancahouse.model.ItemDetail
 
-class DetailHouseActivity : AppCompatActivity(), DetailHouseContract.View {
+class DetailItemActivity : AppCompatActivity(), DetailItemContract.View {
 
     companion object {
-        private val TAG = DetailHouseActivity::class.java.simpleName
+        private val TAG = DetailItemActivity::class.java.simpleName
     }
 
     private lateinit var textViewDescription: TextView
     private lateinit var progressBarLoading: ProgressBar
     private lateinit var linearLayoutImages: LinearLayout
 
-    private lateinit var presenter : DetailHouseContract.Presenter
+    private lateinit var presenter : DetailItemContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_house)
-        setPresenter(DetailHousePresenter(this))
+        setPresenter(DetailItemPresenter(this))
         presenter.onViewCreated()
 
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -106,14 +105,14 @@ class DetailHouseActivity : AppCompatActivity(), DetailHouseContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onGetHouseDetail(houseDetail: HouseDetail) {
+    override fun onGetHouseDetail(itemDetail: ItemDetail) {
         Log.i(TAG, "onGetHouseDetail()")
 
         progressBarLoading.visibility = View.GONE
 
         linearLayoutImages.removeAllViews()
 
-        for (url in houseDetail.imageUrls) {
+        for (url in itemDetail.imageUrls) {
 
             val imageUrl = Constants.HOST + url
             val imageView = ImageView(this)
@@ -144,7 +143,7 @@ class DetailHouseActivity : AppCompatActivity(), DetailHouseContract.View {
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
         }
-        Toast.makeText(this@DetailHouseActivity, "email", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@DetailItemActivity, "email", Toast.LENGTH_SHORT).show()
     }
 
     override fun onGetTelephoneNumber(telephoneNumber: String) {
@@ -154,11 +153,11 @@ class DetailHouseActivity : AppCompatActivity(), DetailHouseContract.View {
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
         }
-        Toast.makeText(this@DetailHouseActivity, "phone", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@DetailItemActivity, "phone", Toast.LENGTH_SHORT).show()
     }
 
 
-    override fun setPresenter(presenter: DetailHouseContract.Presenter) {
+    override fun setPresenter(presenter: DetailItemContract.Presenter) {
         this.presenter = presenter
     }
 }

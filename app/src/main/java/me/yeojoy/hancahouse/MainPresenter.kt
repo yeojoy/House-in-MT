@@ -60,10 +60,6 @@ class MainPresenter(view: MainContract.View) : MainContract.Presenter {
         coroutineScope.cancel()
     }
 
-    override fun listItemClicked() {
-
-    }
-
     private suspend fun callWebpage(): List<House> =
         withContext(Dispatchers.IO) {
             val houseNetworkRepository = HouseNetworkRepository()

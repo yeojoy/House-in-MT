@@ -9,14 +9,14 @@ import android.util.Log
 import android.util.Patterns
 import android.view.View
 import me.yeojoy.hancahouse.app.Constants
-import me.yeojoy.hancahouse.detail.DetailHouseContract
+import me.yeojoy.hancahouse.detail.DetailItemContract
 
 class WebPageManager {
     companion object {
         val TAG = WebPageManager::class.simpleName
     }
 
-    fun parseWholePage(presenter: DetailHouseContract.Presenter, contents: String)
+    fun parseWholePage(presenter: DetailItemContract.Presenter, contents: String)
             : SpannableStringBuilder {
         Log.d(TAG, "contents : $contents")
         val spannableStringBuilder = SpannableStringBuilder()

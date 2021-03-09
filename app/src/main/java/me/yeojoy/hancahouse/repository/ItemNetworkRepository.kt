@@ -2,6 +2,7 @@ package me.yeojoy.hancahouse.repository;
 
 import me.yeojoy.hancahouse.app.Constants
 import me.yeojoy.hancahouse.model.House
+import me.yeojoy.hancahouse.model.Item
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -11,17 +12,12 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HouseNetworkRepository {
+class ItemNetworkRepository {
 
-    fun loadPage(page: Int, type: Int): List<House> {
-        val houses = mutableListOf<House>()
+    fun loadPage(page: Int): List<Item> {
+        val items = mutableListOf<Item>()
 
-        val url: String = when (type) {
-            Constants.TYPE_RENT -> URLDecoder.decode(Constants.URL_FORMAT_FOR_RENT, "UTF-8") + page
-            Constants.TYPE_SUBLET -> URLDecoder.decode(Constants.URL_FORMAT_FOR_SUBLET, "UTF-8") + page
-            else -> URLDecoder.decode(Constants.URL_FORMAT_FOR_SUBLET, "UTF-8") + page
-        }
-
+        val url: String = URLDecoder.decode(Constants.URL_FORMAT_FOR_SELLING, "UTF-8") + page
         val response: Connection.Response? = Jsoup.connect(url)
                 .method(Connection.Method.GET)
                 .execute()
@@ -56,12 +52,12 @@ class HouseNetworkRepository {
 
                 val parsedTime = SimpleDateFormat(Constants.PARSED_TIME_FORMATTER, Locale.getDefault()).format(Date())
 
-                val house = House(title ?: "", thumbnailUrl,
+                val item = Item(title ?: "", thumbnailUrl,
                         detailUrl ?: "", author ?: "",
                         date?.time ?: 0L, parsedTime, uid?.toLong() ?: 0L)
-                houses.add(house)
+                items.add(item)
             }
         }
-        return houses
+        return items
     }
 }

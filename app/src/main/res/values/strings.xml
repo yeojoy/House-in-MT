@@ -9,6 +9,11 @@
 
     <string name="warn_empty_list">There is no list.</string>
 
+    <!-- Main -->
+    <string name="tab_name_sublet">House Sublet</string>
+    <string name="tab_name_rent">House Rent</string>
+    <string name="tab_name_selling">Sell items</string>
+
     <!-- Setting -->
     <string name="title_setting">Setting</string>
 

@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class HouseDetail(
+data class ItemDetail(
         var title: String = "",
         var contents: String? = "",
         var url: String? = "",

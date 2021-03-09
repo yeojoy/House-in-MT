@@ -12,9 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
 import me.yeojoy.hancahouse.app.adapter.HouseAdapter
-import me.yeojoy.hancahouse.detail.DetailHouseActivity
+import me.yeojoy.hancahouse.detail.DetailItemActivity
 import me.yeojoy.hancahouse.model.House
-import me.yeojoy.hancahouse.util.AppPreferences
 
 class MainActivity : AppCompatActivity(), MainContract.View {
     companion object {
@@ -82,7 +81,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun onItemClicked(house: House) {
         // TODO set image transition animation
-        val intent = Intent(this, DetailHouseActivity::class.java)
+        val intent = Intent(this, DetailItemActivity::class.java)
         intent.putExtra(House::class.simpleName, house)
 //        startActionMode(intent /* , activitonOptions.toBundle()*/)
         startActivity(intent)

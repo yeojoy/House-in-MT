@@ -3,7 +3,7 @@ package me.yeojoy.hancahouse.repository
 import android.text.TextUtils
 import android.util.Log
 import me.yeojoy.hancahouse.app.Constants
-import me.yeojoy.hancahouse.model.HouseDetail
+import me.yeojoy.hancahouse.model.ItemDetail
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -12,12 +12,12 @@ import org.jsoup.select.Elements
 import java.net.URLDecoder
 import java.util.*
 
-class HouseDetailNetworkRepository {
+class ItemDetailNetworkRepository {
     companion object {
-        private val TAG = HouseDetailNetworkRepository::class.java.simpleName
+        private val TAG = ItemDetailNetworkRepository::class.java.simpleName
     }
 
-    fun loadPage(title: String, detailUrl: String?) : HouseDetail {
+    fun loadPage(title: String, detailUrl: String?) : ItemDetail {
         var url = URLDecoder.decode(detailUrl, "UTF-8")
         if (!url.startsWith("https://")) {
             url = Constants.HOST + url
@@ -62,7 +62,7 @@ class HouseDetailNetworkRepository {
         val contentString = contentStringBuilder.toString().replace(pattern.toRegex(), "\n")
         Log.d(TAG, "content > $contentString")
 
-        return HouseDetail(title, contentString, null, detailUrl, imageUrls)
+        return ItemDetail(title, contentString, null, detailUrl, imageUrls)
     }
 
 }

@@ -19,7 +19,7 @@ class HouseAdapter(private val presenter: MainContract.Presenter)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HouseViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.row_house, parent, false)
+                .inflate(R.layout.row_item, parent, false)
         return HouseViewHolder(view, presenter::houseItemClicked)
     }
 

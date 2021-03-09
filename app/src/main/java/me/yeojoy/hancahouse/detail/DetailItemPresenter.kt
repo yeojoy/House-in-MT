@@ -2,15 +2,15 @@ package me.yeojoy.hancahouse.detail
 
 import kotlinx.coroutines.*
 import me.yeojoy.hancahouse.model.House
-import me.yeojoy.hancahouse.model.HouseDetail
-import me.yeojoy.hancahouse.repository.HouseDetailNetworkRepository
+import me.yeojoy.hancahouse.model.ItemDetail
+import me.yeojoy.hancahouse.repository.ItemDetailNetworkRepository
 import me.yeojoy.hancahouse.util.WebPageManager
 
-class DetailHousePresenter(view: DetailHouseContract.View) : DetailHouseContract.Presenter {
+class DetailItemPresenter(view: DetailItemContract.View) : DetailItemContract.Presenter {
 
-    private val view: DetailHouseContract.View = view
+    private val view: DetailItemContract.View = view
     private lateinit var house: House
-    private lateinit var houseDetail: HouseDetail
+    private lateinit var houseDetail: ItemDetail
 
     private val parentJob = Job()
 
@@ -36,7 +36,7 @@ class DetailHousePresenter(view: DetailHouseContract.View) : DetailHouseContract
 
             val webPageManager = WebPageManager()
             houseDetail.contents?.let {
-                view.onGetWholeContents(webPageManager.parseWholePage(this@DetailHousePresenter, it)) }
+                view.onGetWholeContents(webPageManager.parseWholePage(this@DetailItemPresenter, it)) }
             view.onGetHouseDetail(houseDetail)
         }
     }
@@ -57,9 +57,9 @@ class DetailHousePresenter(view: DetailHouseContract.View) : DetailHouseContract
         coroutineScope.cancel()
     }
 
-    private suspend fun getHouseDetailContents(title: String, detailUrl: String): HouseDetail =
+    private suspend fun getHouseDetailContents(title: String, detailUrl: String): ItemDetail =
             withContext(Dispatchers.IO) {
-                val houseDetailNetworkRepositoy = HouseDetailNetworkRepository()
+                val houseDetailNetworkRepositoy = ItemDetailNetworkRepository()
                 houseDetailNetworkRepositoy.loadPage(title, detailUrl)
             }
 }
