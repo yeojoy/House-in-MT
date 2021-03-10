@@ -16,25 +16,25 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import me.yeojoy.hancahouse.R
 import me.yeojoy.hancahouse.WebActivity
 import me.yeojoy.hancahouse.app.Constants
-import me.yeojoy.hancahouse.model.House
+import me.yeojoy.hancahouse.model.Item
 import me.yeojoy.hancahouse.model.ItemDetail
 
-class DetailItemActivity : AppCompatActivity(), DetailItemContract.View {
+class ItemDetailActivity : AppCompatActivity(), ItemDetailContract.View<Item> {
 
     companion object {
-        private val TAG = DetailItemActivity::class.java.simpleName
+        private val TAG = ItemDetailActivity::class.java.simpleName
     }
 
     private lateinit var textViewDescription: TextView
     private lateinit var progressBarLoading: ProgressBar
     private lateinit var linearLayoutImages: LinearLayout
 
-    private lateinit var presenter : DetailItemContract.Presenter
+    private lateinit var presenter : ItemDetailContract.Presenter<Item>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_house)
-        setPresenter(DetailItemPresenter(this))
+        setContentView(R.layout.activity_detail_item)
+        setPresenter(ItemDetailPresenter(this))
         presenter.onViewCreated()
 
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -44,10 +44,10 @@ class DetailItemActivity : AppCompatActivity(), DetailItemContract.View {
             return
         }
 
-        val house: House? = intent.getParcelableExtra(House::class.java.simpleName)
-        Log.d(TAG, "DETAIL ACTIVITY >>> $house")
-        house.let {
-            presenter.setHouse(it!!)
+        val item = intent.getParcelableExtra(Constants.KEY_ITEM) as Item?
+        Log.d(TAG, "DETAIL ACTIVITY >>> $item")
+        item.let {
+            presenter.setItem(it!!)
         }
 
         val appBarLayout = findViewById<AppBarLayout>(R.id.appbar)
@@ -57,22 +57,22 @@ class DetailItemActivity : AppCompatActivity(), DetailItemContract.View {
         val imageViewThumbnail = findViewById<ImageView>(R.id.image_view_thumbnail)
         val textViewTitle = findViewById<TextView>(R.id.text_view_title)
         textViewDescription = findViewById(R.id.text_view_description)
-        progressBarLoading = findViewById(R.id.progress_bar_loading)
+        progressBarLoading = findViewById(R.id.progressBarLoading)
         linearLayoutImages = findViewById(R.id.linear_layout_images)
         textViewDescription.setMovementMethod(LinkMovementMethod.getInstance())
 
-        if (!TextUtils.isEmpty(house?.thumbnailUrl) &&
-                house?.thumbnailUrl != Constants.NO_IMAGE) {
+        if (!TextUtils.isEmpty(item?.thumbnailUrl) &&
+                item?.thumbnailUrl != Constants.NO_IMAGE) {
             val size = "-120x90"
-            val imageUrl = house?.thumbnailUrl?.replace(size, "")
+            val imageUrl = item?.thumbnailUrl?.replace(size, "")
             Glide.with(this)
                     .load(imageUrl)
                     .centerCrop()
                     .into(imageViewThumbnail)
         }
-        textViewTitle.text = house?.title
+        textViewTitle.text = item?.title
         val collapsingToolbarLayout = findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
-        collapsingToolbarLayout.title = house?.author
+        collapsingToolbarLayout.title = item?.author
 
     }
 
@@ -89,16 +89,7 @@ class DetailItemActivity : AppCompatActivity(), DetailItemContract.View {
                 return true
             }
             R.id.go_web_page -> {
-                val url = "https://google.com/images"
-                Log.d(TAG, "url : $url")
-                if (TextUtils.isEmpty(url)) {
-                    Toast.makeText(this, R.string.toast_no_detail_url, Toast.LENGTH_SHORT)
-                            .show()
-                    return false
-                }
-                val intent = Intent(this, WebActivity::class.java)
-                intent.putExtra(Constants.KEY_INTENT_URL, url)
-                startActivity(intent)
+                presenter.goWebClicked()
                 return true
             }
         }
@@ -143,7 +134,7 @@ class DetailItemActivity : AppCompatActivity(), DetailItemContract.View {
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
         }
-        Toast.makeText(this@DetailItemActivity, "email", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@ItemDetailActivity, "email", Toast.LENGTH_SHORT).show()
     }
 
     override fun onGetTelephoneNumber(telephoneNumber: String) {
@@ -153,11 +144,23 @@ class DetailItemActivity : AppCompatActivity(), DetailItemContract.View {
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
         }
-        Toast.makeText(this@DetailItemActivity, "phone", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@ItemDetailActivity, "phone", Toast.LENGTH_SHORT).show()
     }
 
 
-    override fun setPresenter(presenter: DetailItemContract.Presenter) {
+    override fun setPresenter(presenter: ItemDetailContract.Presenter<Item>) {
         this.presenter = presenter
+    }
+
+    override fun onGetWebUrl(url: String) {
+        Log.d(TAG, "url : $url")
+        if (TextUtils.isEmpty(url)) {
+            Toast.makeText(this, R.string.toast_no_detail_url, Toast.LENGTH_SHORT)
+                    .show()
+            return
+        }
+        val intent = Intent(this, WebActivity::class.java)
+        intent.putExtra(Constants.KEY_INTENT_URL, url)
+        startActivity(intent)
     }
 }

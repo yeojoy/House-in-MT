@@ -25,7 +25,10 @@
         </activity>
 
         <activity
-            android:name=".detail.DetailItemActivity"
+            android:name=".detail.HouseDetailActivity"
+            android:theme="@style/AppTheme.DetailActivity" />
+        <activity
+            android:name=".detail.ItemDetailActivity"
             android:theme="@style/AppTheme.DetailActivity" />
         <activity android:name=".SettingActivity" />
 

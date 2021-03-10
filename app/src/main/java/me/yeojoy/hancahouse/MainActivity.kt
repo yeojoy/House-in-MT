@@ -4,16 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
-import me.yeojoy.hancahouse.app.adapter.HouseAdapter
-import me.yeojoy.hancahouse.detail.DetailItemActivity
-import me.yeojoy.hancahouse.model.House
+import me.yeojoy.hancahouse.app.adapter.TabPageAdapter
 
 class MainActivity : AppCompatActivity(), MainContract.View {
     companion object {
@@ -21,29 +18,26 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     private lateinit var presenter: MainContract.Presenter
-    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setPresenter(MainPresenter(this))
-
-        setSupportActionBar(toolbar)
-
         presenter.onViewCreated()
 
-        recyclerView = findViewById(R.id.recyclerview)
-        recyclerView.adapter = HouseAdapter(presenter)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        setSupportActionBar(toolbar)
+        initTabLayout()
+    }
 
-        val floatActionButton = findViewById<FloatingActionButton>(R.id.floating_action_button_refresh)
-        floatActionButton.setOnClickListener {
-            // TODO load list
-        }
-
-        presenter.retrieveHouses()
-        // TODO if this is first launch, load page 2 and 3.
-
+    private fun initTabLayout() {
+        viewPager.adapter = TabPageAdapter(this)
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = when (position) {
+                0 -> getString(R.string.tab_name_sublet)
+                1 -> getString(R.string.tab_name_rent)
+                else -> getString(R.string.tab_name_selling)
+            }
+        }.attach()
     }
 
     override fun onDestroy() {
@@ -65,30 +59,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onGetHouses(hasError: Boolean) {
-        if (hasError) {
-            Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
-            textViewEmptyList.visibility = View.VISIBLE
-            recyclerView.visibility = View.GONE
-        } else {
-            textViewEmptyList.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
-            recyclerView.adapter?.notifyDataSetChanged()
-        }
-    }
-
-    override fun onItemClicked(house: House) {
-        // TODO set image transition animation
-        val intent = Intent(this, DetailItemActivity::class.java)
-        intent.putExtra(House::class.simpleName, house)
-//        startActionMode(intent /* , activitonOptions.toBundle()*/)
-        startActivity(intent)
-    }
-
-    override fun refreshResult(houses: List<House>?) {
-
     }
 
     override fun setPresenter(presenter: MainContract.Presenter) {

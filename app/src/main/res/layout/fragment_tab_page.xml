@@ -11,20 +11,23 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:paddingBottom="56dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/row_item" />
+        tools:listitem="@layout/row_item"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/textViewEmptyList"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="gone"
         android:text="@string/warn_empty_list"
+        android:visibility="visible"
         app:layout_constraintBaseline_toBaselineOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

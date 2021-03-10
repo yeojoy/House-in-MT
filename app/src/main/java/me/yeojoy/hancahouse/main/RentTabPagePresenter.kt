@@ -5,10 +5,10 @@ import me.yeojoy.hancahouse.app.Constants
 import me.yeojoy.hancahouse.model.House
 import me.yeojoy.hancahouse.repository.HouseNetworkRepository
 
-class RentTabPagePresenter(view: TabPageContract.View<House>) : TabPageContract.Presenter<House> {
+class RentTabPagePresenter(private val view: TabPageContract.View<House>)
+    : TabPageContract.Presenter<House> {
 
     private var items: MutableList<House> = mutableListOf()
-    private var view = view
 
     private val parentJob = Job()
     private val coroutineExceptionHandler: CoroutineExceptionHandler
@@ -20,7 +20,7 @@ class RentTabPagePresenter(view: TabPageContract.View<House>) : TabPageContract.
         GlobalScope.launch { println("Caught $throwable") }
     }
 
-    val coroutineScope = CoroutineScope(
+    private val coroutineScope = CoroutineScope(
             Dispatchers.Main + parentJob
                     + coroutineExceptionHandler
     )
@@ -43,7 +43,7 @@ class RentTabPagePresenter(view: TabPageContract.View<House>) : TabPageContract.
     }
 
     override fun itemAt(position: Int): House {
-        return items.get(position)
+        return items[position]
     }
 
     override fun onViewCreated() {

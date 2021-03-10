@@ -10,9 +10,9 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
-import android.widget.Toolbar
 
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_web.*
 
 import me.yeojoy.hancahouse.app.Constants
 
@@ -22,14 +22,11 @@ class WebActivity : AppCompatActivity() {
         val TAG = WebActivity::class.simpleName
     }
 
-    private lateinit var progressBar : ProgressBar
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web)
-        val toolbar : Toolbar = findViewById(R.id.toolbar)
 
-        setActionBar(toolbar)
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (intent == null) {
@@ -50,11 +47,9 @@ class WebActivity : AppCompatActivity() {
 
         Log.d(TAG, "Url >>> $url")
 
-        val webView : WebView = findViewById(R.id.webview)
-        progressBar = findViewById(R.id.progress_bar_loading)
-        setupWebViewSettings(webView)
+        setupWebViewSettings(webview)
 
-        webView.loadUrl(url)
+        webview.loadUrl(url)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -76,7 +71,7 @@ class WebActivity : AppCompatActivity() {
         settings.allowFileAccess = true
         settings.userAgentString = "app"
         webView.webChromeClient = WebChromeClient()
-        webView.webViewClient = HancaWebViewClient(progressBar)
+        webView.webViewClient = HancaWebViewClient(progressBarLoading)
         settings.setSupportZoom(false)
         settings.setAppCacheEnabled(false)
     }

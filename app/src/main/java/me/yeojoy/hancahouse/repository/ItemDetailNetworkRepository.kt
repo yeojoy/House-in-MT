@@ -22,6 +22,7 @@ class ItemDetailNetworkRepository {
         if (!url.startsWith("https://")) {
             url = Constants.HOST + url
         }
+
         Log.d(TAG, "Detail House url : $url")
         var response = Jsoup.connect(url)
                 .method(Connection.Method.GET)
@@ -62,7 +63,7 @@ class ItemDetailNetworkRepository {
         val contentString = contentStringBuilder.toString().replace(pattern.toRegex(), "\n")
         Log.d(TAG, "content > $contentString")
 
-        return ItemDetail(title, contentString, null, detailUrl, imageUrls)
+        return ItemDetail(title, contentString, detailUrl, null, imageUrls)
     }
 
 }

@@ -20,7 +20,7 @@ class SubletTabPagePresenter(view: TabPageContract.View<House>) : TabPageContrac
         GlobalScope.launch { println("Caught $throwable") }
     }
 
-    val coroutineScope = CoroutineScope(
+    private val coroutineScope = CoroutineScope(
             Dispatchers.Main + parentJob
                     + coroutineExceptionHandler
     )

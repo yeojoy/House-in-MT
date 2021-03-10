@@ -4,10 +4,10 @@ import kotlinx.coroutines.*
 import me.yeojoy.hancahouse.model.Item
 import me.yeojoy.hancahouse.repository.ItemNetworkRepository
 
-class SellingTabPagePresenter(view: TabPageContract.View<Item>) : TabPageContract.Presenter<Item> {
+class SellingTabPagePresenter(private val view: TabPageContract.View<Item>)
+    : TabPageContract.Presenter<Item> {
 
     private var items: MutableList<Item> = mutableListOf()
-    private var view = view
 
     private val parentJob = Job()
     private val coroutineExceptionHandler: CoroutineExceptionHandler
@@ -19,7 +19,7 @@ class SellingTabPagePresenter(view: TabPageContract.View<Item>) : TabPageContrac
         GlobalScope.launch { println("Caught $throwable") }
     }
 
-    val coroutineScope = CoroutineScope(
+    private val coroutineScope = CoroutineScope(
             Dispatchers.Main + parentJob
                     + coroutineExceptionHandler
     )
@@ -42,7 +42,7 @@ class SellingTabPagePresenter(view: TabPageContract.View<Item>) : TabPageContrac
     }
 
     override fun itemAt(position: Int): Item {
-        return items.get(position)
+        return items[position]
     }
 
     override fun onViewCreated() {

@@ -1,22 +1,24 @@
 package me.yeojoy.hancahouse.detail
 
 import kotlinx.coroutines.*
-import me.yeojoy.hancahouse.model.House
+import me.yeojoy.hancahouse.BuildConfig
+import me.yeojoy.hancahouse.model.Item
 import me.yeojoy.hancahouse.model.ItemDetail
 import me.yeojoy.hancahouse.repository.ItemDetailNetworkRepository
 import me.yeojoy.hancahouse.util.WebPageManager
 
-class DetailItemPresenter(view: DetailItemContract.View) : DetailItemContract.Presenter {
+class ItemDetailPresenter(private val view: ItemDetailContract.View<Item>)
+    : ItemDetailContract.Presenter<Item> {
 
-    private val view: DetailItemContract.View = view
-    private lateinit var house: House
-    private lateinit var houseDetail: ItemDetail
+    private lateinit var item: Item
+    private lateinit var itemDetail: ItemDetail
 
     private val parentJob = Job()
 
-    private val coroutineExceptionHandler: CoroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+    private val coroutineExceptionHandler: CoroutineExceptionHandler
+            = CoroutineExceptionHandler { _, throwable ->
         coroutineScope.launch(Dispatchers.Main) {
-            System.out.println("There is an error to get House Detail information.")
+            println("There is an error to get House Detail information.")
         }
 
         GlobalScope.launch { println("Caught $throwable") }
@@ -28,16 +30,16 @@ class DetailItemPresenter(view: DetailItemContract.View) : DetailItemContract.Pr
                     + coroutineExceptionHandler
     )
 
-    override fun setHouse(house: House) {
-        this.house = house
+    override fun setItem(item: Item) {
+        this.item = item
 
         coroutineScope.launch(Dispatchers.Main) {
-            houseDetail = getHouseDetailContents(house.title, house.detailUrl)
+            itemDetail = getItemDetailContents(item.title, item.detailUrl)
 
-            val webPageManager = WebPageManager()
-            houseDetail.contents?.let {
-                view.onGetWholeContents(webPageManager.parseWholePage(this@DetailItemPresenter, it)) }
-            view.onGetHouseDetail(houseDetail)
+            val webPageManager = WebPageManager<Item>()
+            itemDetail.contents?.let {
+                view.onGetWholeContents(webPageManager.parseWholePage(this@ItemDetailPresenter, it)) }
+            view.onGetHouseDetail(itemDetail)
         }
     }
 
@@ -57,10 +59,15 @@ class DetailItemPresenter(view: DetailItemContract.View) : DetailItemContract.Pr
         coroutineScope.cancel()
     }
 
-    private suspend fun getHouseDetailContents(title: String, detailUrl: String): ItemDetail =
+    private suspend fun getItemDetailContents(title: String, detailUrl: String): ItemDetail =
             withContext(Dispatchers.IO) {
                 val houseDetailNetworkRepositoy = ItemDetailNetworkRepository()
                 houseDetailNetworkRepositoy.loadPage(title, detailUrl)
             }
+
+    override fun goWebClicked() {
+        if (BuildConfig.DEBUG) println(item.detailUrl)
+        view.onGetWebUrl(item.detailUrl)
+    }
 }
 
